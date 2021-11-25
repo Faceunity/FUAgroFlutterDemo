@@ -7,6 +7,7 @@ import android.os.Message
 import androidx.annotation.NonNull
 import com.faceunity.core.entity.FURenderInputData
 import com.faceunity.core.entity.FURenderOutputData
+import com.faceunity.core.enumeration.CameraFacingEnum
 import com.faceunity.core.enumeration.FUInputBufferEnum
 import com.faceunity.core.enumeration.FUTransformMatrixEnum
 import com.faceunity.core.faceunity.FURenderKit
@@ -36,6 +37,7 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
   private var fuRenderOutputData: FURenderOutputData? = null
   private val renderLock = Object()
   private val renderThread = HandlerThread("fuRenderer")
+
   private var fuHandler: Handler? = null
   private class FuHandler(looper: Looper, plugin: AgoraRtcRawdataPlugin) : Handler(looper) {
     private val mPluginWeakReference: WeakReference<AgoraRtcRawdataPlugin> = WeakReference(plugin)
@@ -47,7 +49,7 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
           plugin.fuRenderOutputData = FURenderKit.getInstance().renderWithInput(plugin.fuRenderInputData!!)
           plugin.renderLock.notifyAll()
         }
-        MSG_EGL_CREATE -> FURenderKit.getInstance().createEGLContext()
+        MSG_EGL_CREATE -> synchronized(plugin.renderLock) { FURenderKit.getInstance().createEGLContext() }
         MSG_EGL_RELEASE -> FURenderKit.getInstance().releaseEGLContext()
       }
     }
@@ -103,11 +105,16 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
                 if (fuRenderInputData == null) {
                   fuRenderInputData = FURenderInputData(videoFrame.width, videoFrame.height)
                 }
+                if (fuRenderInputData!!.width != videoFrame.width || fuRenderInputData!!.height != videoFrame.height) {
+                  /** 部分机型前几帧的宽高和后面不同 **/
+                  fuRenderInputData = FURenderInputData(videoFrame.width, videoFrame.height)
+                }
                 fuRenderInputData!!.apply {
                   imageBuffer = FURenderInputData.FUImageBuffer(FUInputBufferEnum.FU_FORMAT_YUV_BUFFER, videoFrame.getyBuffer(), videoFrame.getuBuffer(), videoFrame.getvBuffer())
                   renderConfig.apply {
                     isNeedBufferReturn = true
                     outputMatrix = FUTransformMatrixEnum.CCROT0_FLIPVERTICAL
+                    cameraFacing = if (videoFrame.rotation == 270) CameraFacingEnum.CAMERA_FRONT else CameraFacingEnum.CAMERA_BACK
                   }
                 }
                 fuHandler?.sendEmptyMessage(MSG_FACEUNITY)

@@ -6,7 +6,6 @@ import com.example.faceunity_plugin.entity.FaceBeautyDataFactory
 import com.faceunity.core.enumeration.FUAITypeEnum
 import com.faceunity.core.faceunity.FUAIKit
 import com.faceunity.core.faceunity.FURenderKit
-import com.faceunity.core.model.facebeauty.FaceBeautyFilterEnum
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
@@ -33,9 +32,7 @@ enum class FuBeautyImpl {
                 val index = arguments["subBizType"] as Int
                 when (FaceBeautyDataFactory.getBeautyIndex()) {
                     2 -> {
-                        if (index == 0) {
-                            FaceBeautyDataFactory.getFaceBeauty().filterName = FaceBeautyFilterEnum.ORIGIN
-                        }
+                        FaceBeautyDataFactory.getFaceBeauty().filterName = FaceBeautyDataFactory.filters[index]
                     }
                 }
             } catch (e: java.lang.ClassCastException) {
@@ -80,6 +77,30 @@ enum class FuBeautyImpl {
             result.success(null)
         }
     },
+    switchOn {
+        override fun handle(plugin: FaceunityPlugin, call: MethodCall, result: MethodChannel.Result) {
+            val arguments = call.arguments as Map<*, *>
+            val value = arguments["value"] as Boolean
+            val type = arguments["bizType"] as Int
+            when(type) {
+                0 -> FURenderKit.getInstance().faceBeauty = if (value) {
+                        FaceBeautyDataFactory.getFaceBeauty()
+                    } else {
+                        null
+                    }
+                1 -> FURenderKit.getInstance().faceBeauty = if (value) {
+                        FaceBeautyDataFactory.getFaceBeauty()
+                    } else {
+                        null
+                    }
+                2 -> FURenderKit.getInstance().faceBeauty = if (value) {
+                        FaceBeautyDataFactory.getFaceBeauty()
+                    } else {
+                        null
+                    }
+            }
+        }
+    },
     config {
         override fun handle(plugin: FaceunityPlugin, call: MethodCall, result: MethodChannel.Result) {
             FUAIKit.getInstance().loadAIProcessor(DemoConfig.BUNDLE_AI_FACE, FUAITypeEnum.FUAITYPE_FACEPROCESSOR)
@@ -91,6 +112,7 @@ enum class FuBeautyImpl {
         override fun handle(plugin: FaceunityPlugin, call: MethodCall, result: MethodChannel.Result) {
             FUAIKit.getInstance().releaseAllAIProcessor()
             FURenderKit.getInstance().faceBeauty = null
+            FaceBeautyDataFactory.resetAll()
             result.success(null)
         }
     },

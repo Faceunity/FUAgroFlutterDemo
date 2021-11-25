@@ -12,22 +12,7 @@ import com.faceunity.core.model.facebeauty.FaceBeautyFilterEnum;
  * 写法不优雅是因为 FaceBeauty 没有开放通用接口也不能继承, 本着不应该修改 module代码的原则暂时这样
  */
 public class FaceBeautyDataFactory {
-//    public static final String[] filters = {"origin", "ziran1", "ziran2", "ziran3", "ziran4", "ziran5", "ziran6", "ziran7", "ziran8",
-//            "zhiganhui1", "zhiganhui2", "zhiganhui3", "zhiganhui4", "zhiganhui5", "zhiganhui6", "zhiganhui7", "zhiganhui8",
-//            "mitao1", "mitao2", "mitao3", "mitao4", "mitao5", "mitao6", "mitao7", "mitao8",
-//            "bailiang1", "bailiang2", "bailiang3", "bailiang4", "bailiang5", "bailiang6", "bailiang7"
-//            , "fennen1", "fennen2", "fennen3", "fennen5", "fennen6", "fennen7", "fennen8",
-//            "lengsediao1", "lengsediao2", "lengsediao3", "lengsediao4", "lengsediao7", "lengsediao8", "lengsediao11",
-//            "nuansediao1", "nuansediao2",
-//            "gexing1", "gexing2", "gexing3", "gexing4", "gexing5", "gexing7", "gexing10", "gexing11",
-//            "xiaoqingxin1", "xiaoqingxin3", "xiaoqingxin4", "xiaoqingxin6",
-//            "heibai1", "heibai2", "heibai3", "heibai4"};
-
-//    public static final String[] skinBeauty = {"blur_level", "color_level", "red_level", "sharpen", "eye_bright", "tooth_whiten", "remove_pouch_strength", "remove_nasolabial_folds_strength"};
-
-//    public static final String[] bodyBeauty = {"cheek_thinning", "cheek_v", "cheek_narrow", "cheek_small", "intensity_cheekbones", "intensity_lower_jaw"
-//            , "eye_enlarging", "intensity_eye_circle", "intensity_chin", "intensity_forehead", "intensity_nose", "intensity_mouth", "intensity_canthus"
-//            , "intensity_eye_space", "intensity_eye_rotate", "intensity_long_nose", "intensity_philtrum", "intensity_smile"};
+    public static final String[] filters = {"origin", "ziran1", "zhiganhui1", "bailiang1", "fennen1", "lengsediao1"};
     
     /*美颜缓存数据模型 用于风格切换*/
     private static final FaceBeauty defaultFaceBeauty = getDefaultFaceBeauty();
@@ -271,6 +256,13 @@ public class FaceBeautyDataFactory {
     public static void resetFilter(FaceBeauty faceBeauty) {
         faceBeauty.setFilterName(FaceBeautyFilterEnum.ZIRAN_2);
         faceBeauty.setFilterIntensity(0.4);
+    }
+
+    public static void resetAll() {
+        resetFilter(defaultFaceBeauty);
+        resetShapeBeauty(defaultFaceBeauty);
+        resetSkinBeauty(defaultFaceBeauty);
+        faceBeauty = defaultFaceBeauty;
     }
     
     private static FaceBeauty getDefaultFaceBeauty() {
