@@ -53,8 +53,15 @@ class FUBeautyFilterViewModel extends BaseViewModel {
   }
 
   @override
+  showBoard() {
+    return true;
+  }
+
+  @override
   void selectedItem(int index) {
     super.selectedItem(index);
+    //0 对应的就是美颜
+    FUBeautyPlugin.selectedItem(index);
   }
 
   @override
@@ -70,5 +77,7 @@ class FUBeautyFilterViewModel extends BaseViewModel {
   @override
   init() {}
   @override
-  dealloc() {}
+  dealloc() {
+    FUBeautyPlugin.dispose();
+  }
 }

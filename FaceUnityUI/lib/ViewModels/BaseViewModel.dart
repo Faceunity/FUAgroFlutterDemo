@@ -1,8 +1,10 @@
-import 'package:faceunity_plugin/FUBeautyPlugin.dart';
 import 'package:faceunity_ui/Models/BaseModel.dart';
 import 'package:faceunity_ui/Models/FaceUnityModel.dart';
+import 'package:faceunity_ui/Tools/ArrayExtension.dart';
+import 'package:faceunity_ui/ViewModels/FUAbstractWidget.dart';
 
-abstract class BaseViewModel extends Object {
+//中间层 处理一些共性的接口，FUAbstractWidget 是底层抽象接口，定义业务行为
+class BaseViewModel extends FUAbstractWidget {
   //数据模型
   late FaceUnityModel dataModel;
 
@@ -15,8 +17,14 @@ abstract class BaseViewModel extends Object {
 
   BaseViewModel(this.dataModel);
 
-  //是否展示Sider，子类重写
+  //是否展示Sider
+  @override
   showSlider() {
+    return false;
+  }
+
+  @override
+  showBoard() {
     return false;
   }
 
@@ -24,19 +32,21 @@ abstract class BaseViewModel extends Object {
   void selectedItem(
     int index,
   ) {
-    if (selectedIndex < dataModel.dataList.length) {
+    if (dataModel.dataList.inRange(index)) {
       selectedIndex = index;
       selectedModel = dataModel.dataList[selectedIndex];
+    } else {
+      print("$this index 越界");
     }
-    //0 对应的就是美颜
-    FUBeautyPlugin.selectedItem(index);
   }
 
   //具体选中哪一个由子类决定
   void sliderValueChange(double value) {
-    if (selectedIndex < dataModel.dataList.length) {
+    if (dataModel.dataList.inRange(selectedIndex)) {
       BaseModel model = dataModel.dataList[selectedIndex];
       model.value = value * model.ratio;
+    } else {
+      print("$this selectedIndex 越界");
     }
   }
 

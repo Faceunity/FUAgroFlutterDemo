@@ -3,8 +3,7 @@ package com.example.faceunity_plugin
 import android.util.Log
 import androidx.annotation.NonNull
 import com.example.faceunity_plugin.impl.FuBeautyImpl
-import com.faceunity.core.callback.OperateCallback
-import com.faceunity.core.faceunity.FURenderManager
+
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -25,16 +24,6 @@ class FaceunityPlugin: FlutterPlugin, MethodCallHandler {
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "faceunity_plugin")
     channel.setMethodCallHandler(this)
-
-    FURenderManager.registerFURender(flutterPluginBinding.applicationContext, authpack.A(), object : OperateCallback {
-      override fun onSuccess(code: Int, msg: String) {
-        Log.d("registerFURender", "success:$msg")
-      }
-
-      override fun onFail(errCode: Int, errMsg: String) {
-        Log.e("registerFURender", "errCode:$errCode   errMsg:$errMsg")
-      }
-    })
   }
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {

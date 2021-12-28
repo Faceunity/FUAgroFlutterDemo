@@ -7,6 +7,8 @@ import 'package:faceunity_ui/ViewModels/BaseViewModel.dart';
 import 'package:faceunity_ui/ViewModels/FUBeautyFilterViewModel.dart';
 import 'package:faceunity_ui/ViewModels/FUBeautyShapeViewModel.dart';
 import 'package:faceunity_ui/ViewModels/FUBeautySkinViewModel.dart';
+import 'package:faceunity_ui/ViewModels/FUMakeupViewModel.dart';
+import 'package:faceunity_ui/ViewModels/FUStickerViewModel.dart';
 import 'package:flutter/cupertino.dart';
 // ignore: import_of_legacy_library_into_null_safe
 
@@ -34,7 +36,7 @@ class ViewModelManager extends Object with ChangeNotifier {
         FaceUnityModel(FUDataType.FUDataTypeBeautySkin, "美肤", true, true));
     curViewModel = skinViewModel;
     viewModelList.add(skinViewModel);
-    //美肤
+    //美型
     FUBeautyShapeViewModel shapeViewModel = FUBeautyShapeViewModel(
         FaceUnityModel(FUDataType.FUDataTypeBeautyShape, "美型", true, true));
     viewModelList.add(shapeViewModel);
@@ -44,10 +46,20 @@ class ViewModelManager extends Object with ChangeNotifier {
         FaceUnityModel(FUDataType.FUDataTypeBeautyFilter, "滤镜", true, true));
     viewModelList.add(filterViewModel);
 
+    //贴纸
+    FUStickerViewModel stickerViewModel = FUStickerViewModel(
+        FaceUnityModel(FUDataType.FUDataTypeSticker, "贴纸", false, false));
+    viewModelList.add(stickerViewModel);
+
+    //美妆
+    FUMakeupViewModel makeupViewModel = FUMakeupViewModel(
+        FaceUnityModel(FUDataType.FUDataTypeMakeup, "美妆", false, false));
+    viewModelList.add(makeupViewModel);
+
     //配置ViewModekManager插件
     FUViewModelManagerPlugin.config();
 
-    //配置化美颜模块: UI上美颜的子模块: 美肤、美型、滤镜是独立的，但是业务上其实是合起来的，所以在这里初始化一次美颜模块即可
+    //配置化美颜模块: UI上美颜的子模块: 美肤、美型、滤镜是独立的，但是业务上其实是合起来的，所以在这里初始化一次美颜模块即可. 无需在每一个里面各自初始化
     FUBeautyPlugin.config();
   }
 
@@ -109,7 +121,6 @@ class ViewModelManager extends Object with ChangeNotifier {
       //具体可以参考switchOn接口注释
       bizType = curViewModel.dataModel.bizType.index - 2;
     }
-
     FUViewModelManagerPlugin.switchOn(isOn, bizType);
   }
 
@@ -171,8 +182,12 @@ class ViewModelManager extends Object with ChangeNotifier {
 
   @override
   void dispose() {
-    super.dispose();
-    FUBeautyPlugin.dispose();
+    for (BaseViewModel viewModel in viewModelList) {
+      viewModel.dealloc();
+    }
+
     FUViewModelManagerPlugin.dispose();
+
+    super.dispose();
   }
 }

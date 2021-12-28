@@ -13,7 +13,7 @@
 #import "FUBeautyViewModel.h"
 #import "FUManager.h"
 @interface FlutterViewModelManagerPluginModel : FlutterBaseModel <FUFlutterPluginModelProtocol>
-@property (nonatomic, assign) int bizType;
+@property (nonatomic, assign) FUDataType bizType;
 @end
 
 @implementation FlutterViewModelManagerPluginModel
@@ -23,7 +23,7 @@
 @interface FlutterViewModelManagerPlugin ()
 @property (nonatomic, strong) FUViewModelManager *manager;
 
-//key 对应的是UI页面的业务索引 0,1,2 对应的是美颜，3,贴纸。4、美妆、5、美体
+//key 对应的是UI页面的业务索引 0 对应的是美颜，1,贴纸。2、美妆、3、美体
 @property (nonatomic, strong) NSDictionary *moduleMap;
 @end
 
@@ -32,7 +32,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _moduleMap = @{@0:@"FlutterFUBeautyPlugin"};
+        _moduleMap = @{@(FUDataTypeBeauty):@"FlutterFUBeautyPlugin",@(FUDataTypeSticker):@"FUStickerPlugin",@(FUDataTypeMakeup):@"FUMakeupPlugin"};
     }
     return self;
 }

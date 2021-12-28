@@ -7,11 +7,9 @@
 
 #import "FaceUnityEntry.h"
 #import <objc/runtime.h>
-#import "FUModulePluginProtocol.h"
-#import "FlutterFUBasePlugin.h"
-#import "FlutterFUBeautyPlugin.h"
-#import "FlutterViewModelManagerPlugin.h"
 #import "FUManager.h"
+#import "FUModulePluginProtocol.h"
+#import "FlutterPluginHeaders.h"
 
 static const NSString *moduleMapKey;
 
@@ -38,26 +36,6 @@ static const NSString *moduleMapKey;
  * 入口接口
  */
 + (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-    
-//    if ([call.method hasPrefix:STREAMCHANNEL] || [call.method hasPrefix:METHODCHANNEL]) {//stream数据
-//        //增加channel参数
-//        NSMutableDictionary *params = [NSMutableDictionary dictionary];
-//        if ([call.arguments isKindOfClass:[NSDictionary class]]) {
-//            if ([call.method hasPrefix:STREAMCHANNEL]) {
-//                [params setObject:self.eventChannel forKey:@"channel"];
-//            } else {
-//                [params setObject:self.methodChannel forKey:@"channel"];
-//            }
-//            [params addEntriesFromDictionary:(NSDictionary *)call.arguments];
-//            customCall = [FlutterMethodCall methodCallWithMethodName:[call.method substringFromIndex:STREAMCHANNEL.length] arguments:params];
-//        } else {
-//            customCall = [FlutterMethodCall methodCallWithMethodName:[call.method substringFromIndex:STREAMCHANNEL.length] arguments:call.arguments];
-//        }
-//
-//    } else {
-//        customCall = call;
-//    }
-    
     FlutterMethodCall *customCall = call;
     SEL selector = NSSelectorFromString([NSString stringWithFormat:@"%@:result:",customCall.method]);
     
@@ -117,8 +95,18 @@ static const NSString *moduleMapKey;
 }
 
 //美颜相关接口
-- (void)FUBeauty:(FlutterMethodCall *)call result:(FlutterResult)result {
+- (void)beauty:(FlutterMethodCall *)call result:(FlutterResult)result {
     [self targetWithClass:[FlutterFUBeautyPlugin class] actionWithCall:call result:result];
+}
+
+//贴纸相关接口
+- (void)sticker:(FlutterMethodCall *)call result:(FlutterResult)result {
+    [self targetWithClass:[FUStickerPlugin class] actionWithCall:call result:result];
+}
+
+
+- (void)makeup:(FlutterMethodCall *)call result:(FlutterResult)result {
+    [self targetWithClass:[FUMakeupPlugin class] actionWithCall:call result:result];
 }
 
 

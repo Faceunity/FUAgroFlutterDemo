@@ -9,8 +9,8 @@
 #import "FUMakeupViewModel.h"
 #import "FUBaseModel.h"
 #import <FURenderKit/FURenderKit.h>
-
 #import "FUManager.h"
+#import "NSObject+AddBundle.h"
 
 @interface FUMakeupViewModel ()
 @property (nonatomic, strong) FUMakeup *makeup;
@@ -49,13 +49,13 @@
     }
     
     //替换bundle
-    NSString *path = [[NSBundle mainBundle] pathForResource:m.imageName ofType:@"bundle"];
+    NSString *path = [self loadPathWithBundleName:@"FaceUnity_Plugin" fileName:m.imageName ofType:@"bundle"];
     if (path) {
         FUItem *item = [[FUItem alloc] initWithPath:path name:m.imageName];
         [self.makeup updateMakeupPackage:item needCleanSubItem:NO];
         self.oldPackageName = m.imageName;
     } else {
-        [self.makeup updateMakeupPackage:nil needCleanSubItem:NO];
+        [self.makeup updateMakeupPackage:nil needCleanSubItem:YES];
         self.oldPackageName = nil;
     }
     

@@ -33,6 +33,10 @@
 }
 
 - (void)addToRenderLoop:(FUBaseViewModel *)viewModel {
+    if (!viewModel) {
+        NSLog(@"addToRenderLoop faild, reason:viewModel is %@",viewModel);
+        return ;
+    }
     self.curType = viewModel.type;
     self.selectedViewModel = viewModel;
     if ([self.dic.allKeys containsObject:@(viewModel.type)]) {

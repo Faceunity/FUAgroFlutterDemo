@@ -45,6 +45,13 @@ class FUBeautySkinViewModel extends BaseViewModel {
   }
 
   @override
+  void selectedItem(int index) {
+    super.selectedItem(index);
+    //0 对应的就是美颜
+    FUBeautyPlugin.selectedItem(index);
+  }
+
+  @override
   //具体选中哪一个由子类决定
   void sliderValueChange(double value) {
     super.sliderValueChange(value);
@@ -55,5 +62,7 @@ class FUBeautySkinViewModel extends BaseViewModel {
   @override
   init() {}
   @override
-  dealloc() {}
+  dealloc() {
+    FUBeautyPlugin.dispose();
+  }
 }

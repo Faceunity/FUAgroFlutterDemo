@@ -1,8 +1,8 @@
 name: faceunity_plugin
 description: A new flutter plugin project.
 version: 0.0.1
-homepage: https://github.com/Faceunity/FULiveDemoFlutter
-###又来加测试咯
+homepage:
+
 environment:
   sdk: ">=2.12.0 <3.0.0"
   flutter: ">=1.20.0"

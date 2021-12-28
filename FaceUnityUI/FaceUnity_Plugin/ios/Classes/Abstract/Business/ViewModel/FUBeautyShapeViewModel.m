@@ -46,6 +46,7 @@
         NSLog(@"%@数据源model 不正确",self);
         return;
     }
+    
     switch (m.indexPath.row) {
         case FUBeautifyShapeCheekThinning: {
             self.beauty.cheekThinning = [m.mValue floatValue];

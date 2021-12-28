@@ -7,47 +7,28 @@ import 'package:faceunity_ui/Models/BaseModel.dart';
 import 'package:faceunity_ui/ResetDialog.dart';
 import 'package:faceunity_ui/Tools/DialogManager.dart';
 import 'package:faceunity_ui/Tools/FUDataDefine.dart';
-import 'package:faceunity_ui/Tools/FUImageTool.dart';
-import 'package:faceunity_ui/Tools/ViewModelManager.dart';
 import 'package:faceunity_ui/ViewModels/BaseViewModel.dart';
 import 'package:faceunity_ui/CompareBtn.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:faceunity_ui/Tools/ViewModelManager.dart';
+import 'package:faceunity_ui/Tools/FUImageTool.dart';
+
 class FaceunityUI extends StatelessWidget {
+  FaceunityUI({this.cameraCallback});
   //传camera 回调显示 UI，不传不显示
   final VoidCallback? cameraCallback;
-  FaceunityUI({this.cameraCallback});
   @override
   Widget build(BuildContext context) {
     return HomePage(this.cameraCallback);
-    //  MaterialApp(
-    //   title: 'Flutter Demo',
-    //   theme: ThemeData(
-    //     // This is the theme of your application.
-    //     //
-    //     // Try running your application with "flutter run". You'll see the
-    //     // application has a blue toolbar. Then, without quitting the app, try
-    //     // changing the primarySwatch below to Colors.green and then invoke
-    //     // "hot reload" (press "r" in the console where you ran "flutter run",
-    //     // or simply save your changes to "hot reload" in a Flutter IDE).
-    //     // Notice that the counter didn't reset back to zero; the application
-    //     // is not restarted.
-    //     primarySwatch: Colors.blue,
-    //     switchTheme: SwitchThemeData(
-    //         thumbColor: MaterialStateProperty.all(Colors.white),
-    //         trackColor: MaterialStateProperty.all(Colors.green[600]),
-    //         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap),
-    //   ),
-    //   home: HomePage(),
-    // );
   }
 }
 
 class HomePage extends StatefulWidget {
-  final VoidCallback? cameraCallBack;
   HomePage(this.cameraCallBack);
+  final VoidCallback? cameraCallBack;
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -62,6 +43,12 @@ class _HomePageState extends State<HomePage> {
     _viewModelManager = ViewModelManager();
     _dialogManager = DialogManager();
     _screenWidth = window.physicalSize.width / window.devicePixelRatio;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    // _viewModelManager.dispose();
   }
 
   @override
@@ -113,7 +100,7 @@ class _HomePageState extends State<HomePage> {
           ViewModelManager manager = _viewModelManager;
           Widget compareBtn = Visibility(
               visible: manager.curViewModel.dataModel.showSwitch,
-              child: CompareBtn(manager.curViewModel.dataModel.isOn));
+              child: CompareBtn(manager));
           Widget collectionView = Container();
 
           if (manager.curViewModel.dataModel.bizType ==
@@ -126,8 +113,14 @@ class _HomePageState extends State<HomePage> {
           } else if (manager.curViewModel.dataModel.bizType ==
               FUDataType.FUDataTypeBeautyFilter) {
             collectionView = _styleSecondListView();
-          } else {
-            //后续其他模块不同UI样式可以在此添加
+          } else if (manager.curViewModel.dataModel.bizType ==
+              FUDataType.FUDataTypeSticker) {
+            //贴纸
+            collectionView = _styleSecondListView();
+          } else if (manager.curViewModel.dataModel.bizType ==
+              FUDataType.FUDataTypeMakeup) {
+            //美妆
+            collectionView = _styleSecondListView();
           }
           return Visibility(
             visible: manager.showSubUI,
@@ -238,52 +231,13 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     });
-    //slider更新受到 curViewModel 和 curViewModel.selectedIndex 以及value值本身影响
-    // return Selector<ViewModelManager, Tuple2<int, BaseViewModel>>(
-    //     selector: (context, manager) =>
-    //         Tuple2(manager.curViewModel.selectedIndex, manager.curViewModel),
-    //     builder: (context, viewModel, child) {
-    //       BaseViewModel viewModel = _viewModelManager.curViewModel;
-    //       double value = 0.0;
-    //       if (viewModel.selectedModel != null) {
-    //         value =
-    //             viewModel.selectedModel!.value / viewModel.selectedModel!.ratio;
-    //       }
-
-    //       int percent = (value * 100).toInt();
-    //       String valueStr = "$percent";
-    //       return Container(
-    //           height: 50,
-    //           width: double.infinity,
-    //           color: Colors.black,
-    //           child: Visibility(
-    //             visible: viewModel.showSlider(),
-    //             child: SliderTheme(
-    //               data: SliderThemeData(
-    //                 trackHeight: 5,
-    //                 activeTrackColor: Color(0xFF5EC7FE),
-    //                 inactiveTrackColor: Colors.white,
-    //                 thumbShape: RoundSliderThumbShape(
-    //                     //  滑块形状，可以自定义
-    //                     enabledThumbRadius: 8 // 滑块大小
-    //                     ),
-    //               ),
-    //               child: Slider(
-    //                   label: valueStr,
-    //                   divisions: 100,
-    //                   value: value,
-    //                   onChanged: (double newValue) =>
-    //                       _viewModelManager.sliderValueChange(newValue)),
-    //             ),
-    //           ));
-    //     });
   }
 
   //美肤、美型、美体系列的conllectionView,具体看UI表现，取个名字脑袋疼
   Widget _styleFirstListView() {
     final _screenWidth = window.physicalSize.width / window.devicePixelRatio;
     String resetImagepath =
-        FUImageTool.getImagePathWithRelativePathPre("Asserts/beauty/");
+        FUImageTool.getImagePathWithRelativePathPre("Asserts/beauty");
     resetImagepath = resetImagepath + "恢复.png";
     return Container(
       color: Colors.black,
@@ -376,15 +330,13 @@ class _HomePageState extends State<HomePage> {
                 String imagePath =
                     FUImageTool.selectedImageState(index, viewModel);
                 String title = dataList[index].title;
-                FUDataType bizType = viewModel.dataModel.bizType;
                 //是否选中时显示边框
                 bool hasBoard = false;
                 bool selected = false;
                 if (viewModel.selectedIndex == index) {
                   selected = true;
                 }
-                if (selected == true &&
-                    bizType == FUDataType.FUDataTypeBeautyFilter) {
+                if (selected == true && viewModel.showBoard()) {
                   hasBoard = true;
                 }
                 return Container(

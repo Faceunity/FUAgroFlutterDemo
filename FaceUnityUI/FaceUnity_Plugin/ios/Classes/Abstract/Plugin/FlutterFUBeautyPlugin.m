@@ -105,7 +105,6 @@
 
 //美肤、美型重置参数
 - (void)resetDefault:(NSDictionary *)params {
-    FlutterBeautyModel *model = [FlutterBeautyModel analysis: params];
     if ([self.viewModel respondsToSelector:@selector(resetDefaultValue)]) {
         //协议方法，目前只有美颜容器类，美肤，美型 viewModel实现了。
         [self.viewModel resetDefaultValue];

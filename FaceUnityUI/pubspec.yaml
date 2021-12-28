@@ -46,6 +46,9 @@ flutter:
     - Asserts/beauty/skin/3.0x/
     - Asserts/beauty/filter/3.0x/
     - Asserts/beauty/shape/3.0x/
+    - Asserts/sticker/3.0x/
+    - Asserts/common/3.0x/
+    - Asserts/makeup/3.0x/
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

@@ -80,7 +80,7 @@ static FUManager *shareManager = NULL;
     
     NSLog(@"faceunitySDK version:%@",[FURenderKit getVersion]);
 
-    [[FUTestRecorder shareRecorder] setupRecord];
+//    [[FUTestRecorder shareRecorder] setupRecord];
     
     self.viewModelManager = [FUViewModelManager new];
     
@@ -94,7 +94,7 @@ static FUManager *shareManager = NULL;
 
 
 - (FURenderOutput *)renderWithInput:(FURenderInput *)input {
-    [[FUTestRecorder shareRecorder] processFrameWithLog];
+//    [[FUTestRecorder shareRecorder] processFrameWithLog];
     FURenderOutput *output = [[FURenderKit shareRenderKit] renderWithInput:input];
     return output;
 }

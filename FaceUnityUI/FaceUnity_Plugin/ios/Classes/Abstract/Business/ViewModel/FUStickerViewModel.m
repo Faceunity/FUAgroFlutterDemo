@@ -9,6 +9,7 @@
 #import "FUStickerViewModel.h"
 #import "FUBaseModel.h"
 #import <FURenderKit/FURenderKit.h>
+#import "NSObject+AddBundle.h"
 
 @interface FUStickerViewModel ()
 @property (nonatomic, strong) FUSticker *curSticker;
@@ -35,8 +36,9 @@
         }
         return;
     }
+//
     
-    NSString *path = [[NSBundle mainBundle] pathForResource:m.imageName ofType:@"bundle"];
+    NSString *path = [self loadPathWithBundleName:@"FaceUnity_Plugin" fileName:m.imageName ofType:@"bundle"];
     if (path) {
         FUSticker *newItem = [[FUSticker alloc] initWithPath:path name:@"sticker"];
         [[FURenderKit shareRenderKit].stickerContainer replaceSticker:self.curSticker withSticker:newItem completion:^{
@@ -46,6 +48,9 @@
         }];
         self.curSticker = newItem;
     } else {
+        if (ViewModelBlock) {
+            ViewModelBlock(nil);
+        }
         [self removeFromRenderLoop];
     }
 }
