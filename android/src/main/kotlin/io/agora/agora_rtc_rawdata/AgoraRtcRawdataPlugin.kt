@@ -113,8 +113,18 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
                   imageBuffer = FURenderInputData.FUImageBuffer(FUInputBufferEnum.FU_FORMAT_YUV_BUFFER, videoFrame.getyBuffer(), videoFrame.getuBuffer(), videoFrame.getvBuffer())
                   renderConfig.apply {
                     isNeedBufferReturn = true
-                    outputMatrix = FUTransformMatrixEnum.CCROT0_FLIPVERTICAL
                     cameraFacing = if (videoFrame.rotation == 270) CameraFacingEnum.CAMERA_FRONT else CameraFacingEnum.CAMERA_BACK
+                    if (videoFrame.rotation == 270) {
+                      cameraFacing = CameraFacingEnum.CAMERA_FRONT
+                      inputBufferMatrix = FUTransformMatrixEnum.CCROT0_FLIPVERTICAL
+                      inputTextureMatrix = FUTransformMatrixEnum.CCROT0_FLIPVERTICAL
+                      outputMatrix = FUTransformMatrixEnum.CCROT0
+                    }else {
+                      cameraFacing = CameraFacingEnum.CAMERA_BACK
+                      inputBufferMatrix = FUTransformMatrixEnum.CCROT0
+                      inputTextureMatrix = FUTransformMatrixEnum.CCROT0
+                      outputMatrix = FUTransformMatrixEnum.CCROT0_FLIPVERTICAL
+                    }
                   }
                 }
                 fuHandler?.sendEmptyMessage(MSG_FACEUNITY)

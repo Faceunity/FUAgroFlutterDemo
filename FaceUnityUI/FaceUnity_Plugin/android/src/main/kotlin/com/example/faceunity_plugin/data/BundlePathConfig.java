@@ -1,4 +1,4 @@
-package com.example.faceunity_plugin.entity;
+package com.example.faceunity_plugin.data;
 
 import java.io.File;
 
@@ -6,7 +6,7 @@ import java.io.File;
  * DESC：
  * Created on 2021/3/1
  */
-public class DemoConfig {
+public class BundlePathConfig {
 
     /************************** 算法Model  ******************************/
     // 人脸识别
