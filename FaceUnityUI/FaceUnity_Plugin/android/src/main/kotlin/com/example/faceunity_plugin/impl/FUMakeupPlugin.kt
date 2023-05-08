@@ -24,7 +24,7 @@ class FUMakeupPlugin {
     fun methodCall(plugin: FaceunityPlugin, call: MethodCall, result: MethodChannel.Result){
         val arguments = call.arguments as? Map<*, *>?
         val method = arguments?.get("method") as String?
-        Log.i("sticker", "methodCall: $arguments")
+        Log.i("makeup", "methodCall: $arguments")
         when(method) {
             "config" -> config()
             "dispose" -> dispose()

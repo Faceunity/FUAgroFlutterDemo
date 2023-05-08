@@ -29,9 +29,9 @@ class FUImageTool {
     return imagePath;
   }
 
-  ///处理不同业务选择状态的工具接口
-  ///curIndex：当前listview遍历的索引
-  static String selectedImageState(int curIndex, BaseViewModel viewModel) {
+  //8.0 以后版本增加设备性能等级区分，
+  static String selectedImageStateWithPerformanceLevel(int curIndex,
+      BaseViewModel viewModel, FUDevicePerformanceLevel performanceLevel) {
     String imagePath = "";
     FUDataType bizType = viewModel.dataModel.bizType;
     BaseModel model = viewModel.dataModel.dataList[curIndex];
@@ -45,14 +45,27 @@ class FUImageTool {
       } else {
         opened = (model.value.abs() - 0) > 0.01 ? true : false;
       }
-      if (viewModel.selectedIndex == curIndex) {
-        imagePath = opened == true
-            ? model.imagePath + '-3.png'
-            : model.imagePath + '-2.png';
+
+      //高低端机逻辑处理
+      bool disable = false;
+      if (model.differentiateDevicePerformance == true) {
+        if (performanceLevel !=
+            FUDevicePerformanceLevel.FUDevicePerformanceLevelHigh)
+          disable = true;
+      }
+
+      if (disable) {
+        imagePath = model.imagePath + '-0.png';
       } else {
-        imagePath = opened == true
-            ? model.imagePath + '-1.png'
-            : model.imagePath + '-0.png';
+        if (viewModel.selectedIndex == curIndex) {
+          imagePath = opened == true
+              ? model.imagePath + '-3.png'
+              : model.imagePath + '-2.png';
+        } else {
+          imagePath = opened == true
+              ? model.imagePath + '-1.png'
+              : model.imagePath + '-0.png';
+        }
       }
     } else {
       //后续业务添加对应的图片逻辑

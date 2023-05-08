@@ -12,6 +12,8 @@
 #import "FlutterBaseModel.h"
 #import "FUBeautyViewModel.h"
 #import "FUBaseModel.h"
+#import "FUManager.h"
+
 
 @interface FlutterBeautyModel : FlutterBaseModel <FUFlutterPluginModelProtocol>
 //美型、美肤、滤镜
@@ -26,7 +28,7 @@
 @synthesize method, value;
 @end
 
-@interface FlutterFUBeautyPlugin ()
+@interface FlutterFUBeautyPlugin ()<FURenderKitDelegate>
 @property (nonatomic, strong) FUBeautyViewModel *viewModel;
 
 @end
@@ -36,7 +38,6 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-
     }
     return self;
 }

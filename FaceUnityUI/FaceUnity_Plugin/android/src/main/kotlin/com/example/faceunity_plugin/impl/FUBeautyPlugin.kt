@@ -60,7 +60,7 @@ class FUBeautyPlugin {
     private fun selectedItem(subBizType: Int) {
         faceBeautyDataFactory?.run {
             if (beautyIndex == 2) {
-                faceBeauty.filterName = FaceBeautyDataFactory.filters[subBizType]
+                setFilter(subBizType)
             }
         }
     }
@@ -77,8 +77,7 @@ class FUBeautyPlugin {
 
     private fun filterSliderValueChange(subBizType: Int, value: Double, strValue: String) {
         faceBeautyDataFactory?.run {
-            faceBeauty.filterName = strValue
-            faceBeauty.filterIntensity = value
+            setFilterIntensity(strValue, value)
         }
     }
 

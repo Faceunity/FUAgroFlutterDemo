@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <MJExtension/MJExtension.h>
+#import "NSObject+AddBundle.h"
 NS_ASSUME_NONNULL_BEGIN
 @interface FUBaseNodeModelProvider : NSObject
 + (instancetype)instanceProducer;

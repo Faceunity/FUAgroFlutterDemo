@@ -1,6 +1,7 @@
 import 'package:faceunity_ui/Models/BaseModel.dart';
 import 'package:faceunity_ui/Models/FaceUnityModel.dart';
 import 'package:faceunity_ui/Tools/ArrayExtension.dart';
+import 'package:faceunity_ui/Tools/FUDataDefine.dart';
 import 'package:faceunity_ui/ViewModels/FUAbstractWidget.dart';
 
 //中间层 处理一些共性的接口，FUAbstractWidget 是底层抽象接口，定义业务行为
@@ -14,6 +15,9 @@ class BaseViewModel extends FUAbstractWidget {
   //当前选中的模型
   // ignore: avoid_init_to_null
   late BaseModel? selectedModel = null;
+
+  //设备性能等级
+  late FUDevicePerformanceLevel performanceLevel;
 
   BaseViewModel(this.dataModel);
 
@@ -38,6 +42,10 @@ class BaseViewModel extends FUAbstractWidget {
     } else {
       print("$this index 越界");
     }
+  }
+
+  bool checkPerforLevelVaild(int index) {
+    return true;
   }
 
   //具体选中哪一个由子类决定

@@ -6,6 +6,8 @@ import com.faceunity.core.enumeration.FUAITypeEnum;
 import com.faceunity.core.faceunity.FUAIKit;
 import com.faceunity.core.faceunity.FURenderKit;
 import com.faceunity.core.model.makeup.SimpleMakeup;
+import com.example.faceunity_plugin.utils.FuDeviceUtils;
+import com.example.faceunity_plugin.data.BundlePathConfig;
 
 import java.util.HashMap;
 
@@ -76,23 +78,31 @@ public class MakeupDataFactory {
             if (makeupMap.containsKey(bundlePath)) {
                 return makeupMap.get(bundlePath);
             }
-            SimpleMakeup makeup = new SimpleMakeup(new FUBundleData(BundlePathConfig.BUNDLE_FACE_MAKEUP));
-            makeup.setCombinedConfig(new FUBundleData(bundlePath));
-            makeup.setMakeupIntensity(1f);
+
+            SimpleMakeup makeup;
+            if (index >= 1 && index <= 4) {
+                makeup = new SimpleMakeup(new FUBundleData(bundlePath));
+            }else {
+                makeup = new SimpleMakeup(new FUBundleData(BundlePathConfig.BUNDLE_FACE_MAKEUP));
+                makeup.setCombinedConfig(new FUBundleData(bundlePath));
+            }
+
+            makeup.setMachineLevel(BundlePathConfig.DEVICE_LEVEL > FuDeviceUtils.DEVICE_LEVEL_MID);//更新设备等级去设置是否开启人脸遮挡
+            makeup.setMakeupIntensity(0.7f);
             makeupMap.put(bundlePath, makeup);
             return makeup;
         }
     }
 
     private String getBundlePath(int index) {
-        if (index == 1) {
-            return "makeup/chaoa.bundle";
-        }else if (index == 2) {
-            return "makeup/dousha.bundle";
-        }else if (index == 3) {
-            return "makeup/naicha.bundle";
-        }else {
-            return null;
+        switch (index) {
+          case 1: return "makeup/diadiatu.bundle";
+          case 2: return "makeup/dongling.bundle";
+          case 3: return "makeup/guofeng.bundle";
+          case 4: return "makeup/hunxie.bundle";
+          case 5: return "makeup/jianling.bundle";
+          case 6: return "makeup/nuandong.bundle";
+          default: return null;
         }
     }
 }

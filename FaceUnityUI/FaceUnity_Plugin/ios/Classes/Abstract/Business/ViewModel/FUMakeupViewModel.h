@@ -11,6 +11,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FUMakeupViewModel : FUBaseViewModel
+- (void)setMakeupIntensity:(double)value;
+- (void)setNewMakeupIntensity:(double)value;
 
 @end
 

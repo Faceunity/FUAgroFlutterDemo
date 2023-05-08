@@ -10,7 +10,7 @@
 #import "FUMakeupNodeModelProvider.h"
 #import "FUFlutterPluginModelProtocol.h"
 #import "FlutterBaseModel.h"
-#import "FUBaseModel.h"
+#import "FUMakeupModel.h"
 
 @interface FlutterMakeupModel : FlutterBaseModel <FUFlutterPluginModelProtocol>
 @property (nonatomic, assign) int index;//选中美妆的索引
@@ -50,9 +50,13 @@
     int index = flutterModel.index;
     NSArray *dataSource = (NSArray *)self.viewModel.provider.dataSource;
     if (index < dataSource.count && index >=0 ) {
-        FUBaseModel *model = dataSource[index];
+        FUMakeupModel *model = (FUMakeupModel *)dataSource[index];
         model.mValue = flutterModel.value;
-        [self.viewModel consumerWithData:model viewModelBlock:nil];
+        if (model.newMakeupFlag) {
+            [self.viewModel setNewMakeupIntensity:[model.mValue doubleValue]];
+        } else {
+            [self.viewModel setMakeupIntensity:[model.mValue doubleValue]];
+        }
     } else {
         NSLog(@"%@,%s: 数组越界",self,__func__);
     }

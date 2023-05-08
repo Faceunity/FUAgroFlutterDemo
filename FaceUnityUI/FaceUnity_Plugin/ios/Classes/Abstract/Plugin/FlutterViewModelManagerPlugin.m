@@ -12,6 +12,7 @@
 #import "FUModuleDefine.h"
 #import "FUBeautyViewModel.h"
 #import "FUManager.h"
+#import <FURenderKit/FURenderKit.h>
 @interface FlutterViewModelManagerPluginModel : FlutterBaseModel <FUFlutterPluginModelProtocol>
 @property (nonatomic, assign) FUDataType bizType;
 @end
@@ -102,6 +103,11 @@
         }
     }
     return nil;
+}
+
+
+- (NSNumber *)getPerformanceLevel {
+    return [NSNumber numberWithInt:(int)[FURenderKit devicePerformanceLevel]];
 }
 
 

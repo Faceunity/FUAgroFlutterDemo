@@ -33,6 +33,11 @@
             self.beauty.faceShape = 4;
 //            [FURenderKit shareRenderKit].beauty = self.beauty;
         }
+        if ([FURenderKit devicePerformanceLevel] == FUDevicePerformanceLevelHigh) {
+            self.beauty.blurType = 3;
+        } else {
+            self.beauty.blurType = 2;
+        }
         self.type = FUDataTypeBeauty;
     }
     return self;

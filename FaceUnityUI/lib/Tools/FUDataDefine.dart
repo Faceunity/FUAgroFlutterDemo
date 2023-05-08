@@ -9,3 +9,12 @@ enum FUDataType {
   FUBeautyMax, //作为none和最大值使用
 
 }
+
+/// 设备性能等级
+enum FUDevicePerformanceLevel {
+  FUDevicePerformanceLevelLow,
+  FUDevicePerformanceLevelMedium,
+  FUDevicePerformanceLevelHigh,
+
+  FUDevicePerformanceLevelMax
+}

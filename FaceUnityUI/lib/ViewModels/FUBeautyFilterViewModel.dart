@@ -33,7 +33,7 @@ class FUBeautyFilterViewModel extends BaseViewModel {
     for (var i = 0; i < titlesKey.length; i++) {
       String titleKey = titlesKey[i];
       BaseModel model =
-          BaseModel(imagePaths[i], titleAndImagePath[titleKey], 0.4);
+          BaseModel(imagePaths[i], titleAndImagePath[titleKey], 0.4, false);
       model.ratio = 1.0;
       model.strValue = titleKey;
       uiList.add(model);

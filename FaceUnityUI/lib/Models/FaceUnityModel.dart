@@ -7,6 +7,7 @@ class FaceUnityModel extends Object {
   late bool isOn;
   //Switch 是否隐藏
   late final bool showSwitch;
+
   //存放美肤、美型、美体等模型列表
   late List<dynamic> dataList = [];
   FaceUnityModel(this.bizType, this.title, this.showSwitch, this.isOn);

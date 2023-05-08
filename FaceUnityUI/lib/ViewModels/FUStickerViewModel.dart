@@ -21,7 +21,7 @@ class FUStickerViewModel extends BaseViewModel {
     });
 
     for (var i = 0; i < titles.length; i++) {
-      BaseModel model = BaseModel(imagePaths[i], '', 0.0);
+      BaseModel model = BaseModel(imagePaths[i], '', 0.0, false);
       uiList.add(model);
     }
 

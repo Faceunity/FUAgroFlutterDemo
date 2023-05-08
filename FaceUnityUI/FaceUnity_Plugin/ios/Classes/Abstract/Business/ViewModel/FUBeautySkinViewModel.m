@@ -27,11 +27,21 @@
             self.beauty = [[FUBeauty alloc] initWithPath:path name:@"FUBeauty"];
             /* 默认精细磨皮 */
             self.beauty.heavyBlur = 0;
-            self.beauty.blurType = 2;
+            
             /* 默认自定义脸型 */
             self.beauty.faceShape = 4;
             self.beauty.enable = NO;
 //            [self addToRenderLoop];
+            // 高性能设备设置去黑眼圈、去法令纹、大眼、嘴型最新效果
+        }
+        if ([FURenderKit devicePerformanceLevel] == FUDevicePerformanceLevelHigh) {
+            self.beauty.blurType = 3;
+            [self.beauty addPropertyMode:FUBeautyPropertyMode2 forKey:FUModeKeyRemovePouchStrength];
+            [self.beauty addPropertyMode:FUBeautyPropertyMode2 forKey:FUModeKeyRemoveNasolabialFoldsStrength];
+            [self.beauty addPropertyMode:FUBeautyPropertyMode3 forKey:FUModeKeyEyeEnlarging];
+            [self.beauty addPropertyMode:FUBeautyPropertyMode3 forKey:FUModeKeyIntensityMouth];
+        } else {
+            self.beauty.blurType = 2;
         }
         self.type = FUDataTypeBeauty;
     }
@@ -62,6 +72,10 @@
             break;
         case FUBeautifySkinSharpen: {
             self.beauty.sharpen =  [m.mValue floatValue];
+        }
+            break;
+        case FUBeautifySkinFace: {
+            self.beauty.faceThreed = [m.mValue floatValue];
         }
             break;
         case FUBeautifySkinEyeBright: {

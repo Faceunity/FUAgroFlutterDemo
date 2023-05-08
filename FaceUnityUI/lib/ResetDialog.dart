@@ -26,80 +26,81 @@ class _ResetDialogState extends State<ResetDialog> {
     return Consumer<DialogManager>(builder: (context, manager, child) {
       _isShow = manager.isShowDialog;
       return Visibility(
-          visible: _isShow,
-          child: Platform.isIOS == true
-              ? CupertinoAlertDialog(
-                  content: new SingleChildScrollView(
-                    child: ListBody(
-                      children: <Widget>[
-                        Text(
-                          "是否将所有参数恢复到默认值",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700),
-                        ),
-                      ],
-                    ),
+        visible: _isShow,
+        child: Platform.isIOS == true
+            ? CupertinoAlertDialog(
+                content: new SingleChildScrollView(
+                  child: ListBody(
+                    children: <Widget>[
+                      Text(
+                        "是否将所有参数恢复到默认值",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ],
                   ),
-                  actions: <Widget>[
-                    CupertinoDialogAction(
-                      child: Text("取消"),
-                      onPressed: () {
-                        if (widget.cancelCallback != null) {
-                          widget.cancelCallback!();
-                          isShow(false);
-                        }
-                      },
-                      textStyle: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    CupertinoDialogAction(
-                      child: Text("确定"),
-                      onPressed: () {
-                        if (widget.comfirmCallback != null) {
-                          widget.comfirmCallback!();
-                          isShow(false);
-                        }
-                      },
-                      textStyle: TextStyle(
-                          color: Colors.blue,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ],
-                )
-              : AlertDialog(
-                  content: new SingleChildScrollView(
-                    child: ListBody(
-                      children: <Widget>[
-                        Text("是否将所有参数恢复到默认值"),
-                      ],
-                    ),
+                ),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                    child: Text("取消"),
+                    onPressed: () {
+                      if (widget.cancelCallback != null) {
+                        widget.cancelCallback!();
+                        isShow(false);
+                      }
+                    },
+                    textStyle: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400),
                   ),
-                  actions: <Widget>[
-                    TextButton(
-                      child: Text("确定"),
-                      onPressed: () {
-                        if (widget.comfirmCallback != null) {
-                          widget.comfirmCallback!();
-                          isShow(false);
-                        }
-                      },
-                    ),
-                    TextButton(
-                      child: Text("取消"),
-                      onPressed: () {
-                        if (widget.cancelCallback != null) {
-                          widget.cancelCallback!();
-                          isShow(false);
-                        }
-                      },
-                    )
-                  ],
-                ));
+                  CupertinoDialogAction(
+                    child: Text("确定"),
+                    onPressed: () {
+                      if (widget.comfirmCallback != null) {
+                        widget.comfirmCallback!();
+                        isShow(false);
+                      }
+                    },
+                    textStyle: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ],
+              )
+            : AlertDialog(
+                content: new SingleChildScrollView(
+                  child: ListBody(
+                    children: <Widget>[
+                      Text("是否将所有参数恢复到默认值"),
+                    ],
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text("确定"),
+                    onPressed: () {
+                      if (widget.comfirmCallback != null) {
+                        widget.comfirmCallback!();
+                        isShow(false);
+                      }
+                    },
+                  ),
+                  TextButton(
+                    child: Text("取消"),
+                    onPressed: () {
+                      if (widget.cancelCallback != null) {
+                        widget.cancelCallback!();
+                        isShow(false);
+                      }
+                    },
+                  )
+                ],
+              ),
+      );
     });
   }
 }
