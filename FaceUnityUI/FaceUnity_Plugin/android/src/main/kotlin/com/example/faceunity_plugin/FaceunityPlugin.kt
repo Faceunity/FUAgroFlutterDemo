@@ -1,13 +1,18 @@
 package com.example.faceunity_plugin
 
+import android.content.Context
 import android.util.Log
 import androidx.annotation.NonNull
+import com.example.faceunity_plugin.data.BundlePathConfig
 import com.example.faceunity_plugin.impl.FUBeautyPlugin
 import com.example.faceunity_plugin.impl.FUMakeupPlugin
 import com.example.faceunity_plugin.impl.FUStickerPlugin
+import com.example.faceunity_plugin.utils.FuDeviceUtils
 import com.faceunity.core.callback.OperateCallback
+import com.faceunity.core.enumeration.FUAITypeEnum
+import com.faceunity.core.faceunity.FUAIKit
 import com.faceunity.core.faceunity.FURenderManager
-
+import com.faceunity.core.utils.FULogger
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -30,8 +35,14 @@ class FaceunityPlugin : FlutterPlugin, MethodCallHandler {
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
   /// when the Flutter Engine is detached from the Activity
   private lateinit var channel: MethodChannel
+  private lateinit var appContext: Context
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+
+    BundlePathConfig.DEVICE_LEVEL = FuDeviceUtils.judgeDeviceLevelGPU()
+    if (BundlePathConfig.DEVICE_LEVEL < 0) {
+        BundlePathConfig.DEVICE_LEVEL = 0
+    }
     FURenderManager.registerFURender(flutterPluginBinding.applicationContext, authpack.A(), object : OperateCallback {
       override fun onFail(errCode: Int, errMsg: String) {
         Log.e("registerFURender", "errCode: $errCode   errMsg: $errMsg")
@@ -39,10 +50,19 @@ class FaceunityPlugin : FlutterPlugin, MethodCallHandler {
 
       override fun onSuccess(code: Int, msg: String) {
         Log.d("registerFURender", "success:$msg")
+
+        FUAIKit.getInstance().loadAIProcessor(BundlePathConfig.BUNDLE_AI_FACE, FUAITypeEnum.FUAITYPE_FACEPROCESSOR)
+        //高端机开启小脸检测
+        FUAIKit.getInstance().faceProcessorSetFaceLandmarkQuality(BundlePathConfig.DEVICE_LEVEL)
+        if (BundlePathConfig.DEVICE_LEVEL > FuDeviceUtils.DEVICE_LEVEL_MID) {
+          FUAIKit.getInstance().fuFaceProcessorSetDetectSmallFace(true)
+        }
       }
     })
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "faceunity_plugin")
     channel.setMethodCallHandler(this)
+    appContext = flutterPluginBinding.applicationContext
+
   }
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
@@ -60,7 +80,7 @@ class FaceunityPlugin : FlutterPlugin, MethodCallHandler {
         fuMakeupPlugin.methodCall(this, call, result)
       }
       viewModelManagerPlugin -> {
-        methodCall(call)
+        methodCall(call, result)
       }
       else -> result.notImplemented()
     }
@@ -70,7 +90,7 @@ class FaceunityPlugin : FlutterPlugin, MethodCallHandler {
     channel.setMethodCallHandler(null)
   }
 
-  private fun methodCall(call: MethodCall) {
+  private fun methodCall(call: MethodCall, @NonNull result: Result) {
     val arguments = call.arguments as? Map<*, *>?
     Log.i("faceunity", "methodCall: ${arguments?.get("method") as String?}")
     when (arguments?.get("method") as String?) {
@@ -83,6 +103,7 @@ class FaceunityPlugin : FlutterPlugin, MethodCallHandler {
         val isOn = arguments["value"] as Boolean
         fuBeautyPlugin.switchOn(isOn, bizType)
       }
+      "getPerformanceLevel" -> result.success(BundlePathConfig.DEVICE_LEVEL)
     }
   }
 }

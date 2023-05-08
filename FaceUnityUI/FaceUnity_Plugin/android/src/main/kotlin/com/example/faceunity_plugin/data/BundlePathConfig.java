@@ -1,6 +1,7 @@
 package com.example.faceunity_plugin.data;
 
 import java.io.File;
+import com.example.faceunity_plugin.utils.FuDeviceUtils;
 
 /**
  * DESC：
@@ -62,7 +63,7 @@ public class BundlePathConfig {
     public static String BUNDLE_BG_SEG_CUSTOM = "effect" + File.separator + "segment" + File.separator + "bg_segment.bundle";
 
     //设备等级默认为中级
-//    public static int DEVICE_LEVEL = FuDeviceUtils.DEVICE_LEVEL_MID;
+    public static int DEVICE_LEVEL = FuDeviceUtils.DEVICE_LEVEL_MID;
 
     //设备名称
 //    public static String DEVICE_NAME = "";

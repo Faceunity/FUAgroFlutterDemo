@@ -15,7 +15,7 @@
         //当前bundle即 framework资源
         NSBundle *bundle = [NSBundle bundleForClass:self.class];
         //bundle 内部的资源bundle
-        NSURL *resource  = [bundle URLForResource:bundleName withExtension:ofType];
+        NSURL *resource  = [bundle URLForResource:bundleName withExtension:@"bundle"];
         //资源路径
         path = [NSBundle pathForResource:fileName ofType:ofType inDirectory:resource.path];
     }
@@ -29,6 +29,6 @@
  * reuturn NSString
  */
 - (NSString *)loadPathWithFileName:(NSString *)fileName ofType:(NSString *)ofType {
-    return [self loadPathWithBundleName:@"fulive_plugin" fileName:fileName ofType:ofType];
+    return [self loadPathWithBundleName:@"FaceUnity_Plugin" fileName:fileName ofType:ofType];
 }
 @end

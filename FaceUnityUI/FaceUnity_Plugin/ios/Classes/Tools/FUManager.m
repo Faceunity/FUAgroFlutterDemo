@@ -76,6 +76,14 @@ static FUManager *shareManager = NULL;
         float flexible = 0.5;
         [FUAIKit setFaceTrackParam:@"mouth_expression_more_flexible" value:flexible];
         NSLog(@"---%lf",endTime);
+        
+        //检测
+        int performanceLevel = (int)[FURenderKit devicePerformanceLevel];
+        FUFaceProcessorFaceLandmarkQuality res = performanceLevel == FUDevicePerformanceLevelHigh ? FUFaceProcessorFaceLandmarkQualityHigh: FUFaceProcessorFaceLandmarkQualityMedium;
+        [FUAIKit shareKit].faceProcessorFaceLandmarkQuality = res;
+        
+        // 设置小脸检测是否打开
+        [FUAIKit shareKit].faceProcessorDetectSmallFace = performanceLevel == FUDevicePerformanceLevelHigh;
     });
     
     NSLog(@"faceunitySDK version:%@",[FURenderKit getVersion]);
@@ -113,4 +121,25 @@ static FUManager *shareManager = NULL;
     [FUManager shareManager].sink = sink;
 }
 
+
++ (void)updateBeautyBlurEffect {
+    if (![FURenderKit shareRenderKit].beauty || ![FURenderKit shareRenderKit].beauty.enable) {
+        return;
+    }
+    if ([FURenderKit devicePerformanceLevel] == FUDevicePerformanceLevelHigh) {
+        // 根据人脸置信度设置不同磨皮效果
+        CGFloat score = [FUAIKit fuFaceProcessorGetConfidenceScore:0];
+        if (score > 0.95) {
+            [FURenderKit shareRenderKit].beauty.blurType = 3;
+            [FURenderKit shareRenderKit].beauty.blurUseMask = YES;
+        } else {
+            [FURenderKit shareRenderKit].beauty.blurType = 2;
+            [FURenderKit shareRenderKit].beauty.blurUseMask = NO;
+        }
+    } else {
+        // 设置精细磨皮效果
+        [FURenderKit shareRenderKit].beauty.blurType = 2;
+        [FURenderKit shareRenderKit].beauty.blurUseMask = NO;
+    }
+}
 @end

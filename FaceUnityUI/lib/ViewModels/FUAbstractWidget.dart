@@ -14,6 +14,11 @@ abstract class FUAbstractWidget extends Object {
 
   showBoard() {}
 
+  //检测性能合法性接口
+  bool checkPerforLevelVaild(int index) {
+    return true;
+  }
+
   //组件初始化像native发消息
   init() {}
   //组件释放 向native 发送消息

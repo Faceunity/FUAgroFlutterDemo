@@ -30,37 +30,63 @@ class ViewModelManager extends Object with ChangeNotifier {
   //是否展示子菜单(美肤、美型、滤镜等等)
   late bool showSubUI = false;
 
+  //设备性能等级,默认高端机，后面等接口拉下来会更新值
+  late FUDevicePerformanceLevel performanceLevel =
+      FUDevicePerformanceLevel.FUDevicePerformanceLevelHigh;
+
   ViewModelManager() {
     //美肤
     FUBeautySkinViewModel skinViewModel = FUBeautySkinViewModel(
         FaceUnityModel(FUDataType.FUDataTypeBeautySkin, "美肤", true, true));
     curViewModel = skinViewModel;
+    skinViewModel.performanceLevel = performanceLevel;
     viewModelList.add(skinViewModel);
     //美型
     FUBeautyShapeViewModel shapeViewModel = FUBeautyShapeViewModel(
         FaceUnityModel(FUDataType.FUDataTypeBeautyShape, "美型", true, true));
     viewModelList.add(shapeViewModel);
+    shapeViewModel.performanceLevel = performanceLevel;
 
     //滤镜
     FUBeautyFilterViewModel filterViewModel = FUBeautyFilterViewModel(
         FaceUnityModel(FUDataType.FUDataTypeBeautyFilter, "滤镜", true, true));
     viewModelList.add(filterViewModel);
+    filterViewModel.performanceLevel = performanceLevel;
 
     //贴纸
     FUStickerViewModel stickerViewModel = FUStickerViewModel(
         FaceUnityModel(FUDataType.FUDataTypeSticker, "贴纸", false, false));
     viewModelList.add(stickerViewModel);
+    stickerViewModel.performanceLevel = performanceLevel;
 
     //美妆
     FUMakeupViewModel makeupViewModel = FUMakeupViewModel(
         FaceUnityModel(FUDataType.FUDataTypeMakeup, "美妆", false, false));
     viewModelList.add(makeupViewModel);
+    makeupViewModel.performanceLevel = performanceLevel;
 
     //配置ViewModekManager插件
     FUViewModelManagerPlugin.config();
 
     //配置化美颜模块: UI上美颜的子模块: 美肤、美型、滤镜是独立的，但是业务上其实是合起来的，所以在这里初始化一次美颜模块即可. 无需在每一个里面各自初始化
     FUBeautyPlugin.config();
+  }
+
+  Future<void> getPerformanceLevelFromNative() async {
+    //从native 获取设备性能等级
+    int performaceLevel = await FUViewModelManagerPlugin.getPerformanceLevel();
+    FUDevicePerformanceLevel type =
+        FUDevicePerformanceLevel.FUDevicePerformanceLevelHigh;
+    if (performaceLevel == 0) {
+      type = FUDevicePerformanceLevel.FUDevicePerformanceLevelLow;
+    } else if (performaceLevel == 1) {
+      type = FUDevicePerformanceLevel.FUDevicePerformanceLevelMedium;
+    }
+
+    //给每个子的viewModel 配置 性能等级，方面子viewModel 处理相关逻辑
+    for (BaseViewModel viewModel in viewModelList) {
+      viewModel.performanceLevel = type;
+    }
   }
 
   //选中某个item
@@ -74,6 +100,10 @@ class ViewModelManager extends Object with ChangeNotifier {
   void sliderValueChange(double value) {
     curViewModel.sliderValueChange(value);
     notifyListeners();
+  }
+
+  bool checkPerforLevelVaild(int index) {
+    return curViewModel.checkPerforLevelVaild(index);
   }
 
   //点击子标题回调
@@ -128,7 +158,8 @@ class ViewModelManager extends Object with ChangeNotifier {
   bool isDefaultValue() {
     bool flag = true;
     for (BaseModel model in curViewModel.dataModel.dataList) {
-      if ((model.value - model.defaultValue).abs() > 0.01) {
+      var diff = ((model.value - model.defaultValue).abs() * 100).round();
+      if (diff >= 1) {
         flag = false;
         break;
       }
@@ -154,15 +185,15 @@ class ViewModelManager extends Object with ChangeNotifier {
     curViewModel = viewModel;
     if (!viewModelCache.containsKey(viewModel.dataModel.bizType)) {
       viewModelCache[viewModel.dataModel.bizType] = viewModel;
-      //通知native 添加到loop
-      //默认选择美颜
-      int tempBizType = 0;
-      //美型、美肤、滤镜公用一个switch 开关状态，所以需要特殊处理下
-      if (!beautyDataType.contains(curViewModel.dataModel.bizType)) {
-        tempBizType = curViewModel.dataModel.bizType.index - 2;
-      }
-      FUViewModelManagerPlugin.addViewModelToRunLoop(tempBizType);
     }
+    //通知native 添加到loop
+    //默认选择美颜
+    int tempBizType = 0;
+    //美型、美肤、滤镜公用一个switch 开关状态，所以需要特殊处理下
+    if (!beautyDataType.contains(curViewModel.dataModel.bizType)) {
+      tempBizType = curViewModel.dataModel.bizType.index - 2;
+    }
+    FUViewModelManagerPlugin.addViewModelToRunLoop(tempBizType);
   }
 
   //移除渲染循环

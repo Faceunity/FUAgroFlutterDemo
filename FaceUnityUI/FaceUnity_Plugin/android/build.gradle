@@ -35,11 +35,15 @@ android {
     defaultConfig {
         minSdkVersion 19
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.faceunity:core:8.0.0'
-    implementation 'com.faceunity:model:8.0.0'
+    implementation 'com.faceunity:core:8.5.0'
+    implementation 'com.faceunity:model:8.5.0'
 //    implementation project(path: ':zego_express_engine')
 }

@@ -23,12 +23,12 @@ dependencies:
   #相芯
   faceunity_ui:
     path: ../FaceUnityUI
-    
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 
-  permission_handler: ^6.0.1
+  permission_handler: ^8.3.0
 
 dev_dependencies:
   flutter_test:

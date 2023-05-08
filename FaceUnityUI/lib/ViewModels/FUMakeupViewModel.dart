@@ -6,30 +6,40 @@ import 'package:faceunity_plugin/FUMakeupPlugin.dart';
 
 class FUMakeupViewModel extends BaseViewModel {
   FUMakeupViewModel(FaceUnityModel dataModel) : super(dataModel) {
-    List<String> imageName = ["noitem", "chaoA", "dousha", "naicha"];
+    List<String> imageName = [
+      "makeup_noitem",
+      "demo_combination_rabbit",
+      "demo_combination_freezing_age",
+      "demo_combination_guo_feng",
+      "demo_combination_mixed_race",
+      "demo_combination_age",
+      "demo_combination_warm_winter"
+    ];
     Map<String, dynamic> imageNameAndTitle = {
-      "noitem": "卸妆",
-      "chaoA": "超A",
-      "dousha": "豆沙",
-      "naicha": "奶茶",
+      "makeup_noitem": "卸妆",
+      "demo_combination_rabbit": "嗲嗲兔",
+      "demo_combination_freezing_age": "冻龄",
+      "demo_combination_guo_feng": "国风",
+      "demo_combination_mixed_race": "混血",
+      "demo_combination_age": "减龄",
+      "demo_combination_warm_winter": "暖冬"
     };
 
     String commonPre =
         FUImageTool.getImagePathWithRelativePathPre("Asserts/makeup/3.0x/");
     List<String> imagePaths = List.generate(imageName.length, (index) {
       String title = imageName[index];
-      if (index == 0) {
-        title = "Asserts/common/3.0x/" + title;
-      } else {
-        title = commonPre + title;
-      }
+
+      title = commonPre + title;
+
       return title;
     });
 
     List<BaseModel> uiList = [];
     for (var i = 0; i < imageName.length; i++) {
       String key = imageName[i];
-      BaseModel model = BaseModel(imagePaths[i], imageNameAndTitle[key], 0.7);
+      BaseModel model =
+          BaseModel(imagePaths[i], imageNameAndTitle[key], 0.7, false);
       model.ratio = 1.0;
       uiList.add(model);
     }

@@ -32,6 +32,11 @@
             self.beauty.enable = NO;
 //            [FURenderKit shareRenderKit].beauty = self.beauty;
         }
+        if ([FURenderKit devicePerformanceLevel] == FUDevicePerformanceLevelHigh) {
+            self.beauty.blurType = 3;
+        } else {
+            self.beauty.blurType = 2;
+        }
         self.type = FUDataTypeBeauty;
     }
     return self;
@@ -46,30 +51,34 @@
         NSLog(@"%@数据源model 不正确",self);
         return;
     }
-    
+    float value = [m.mValue floatValue];
     switch (m.indexPath.row) {
         case FUBeautifyShapeCheekThinning: {
-            self.beauty.cheekThinning = [m.mValue floatValue];
+            self.beauty.cheekThinning = value;
         }
             break;
         case FUBeautifyShapeCheekV: {
-            self.beauty.cheekV = [m.mValue floatValue];
+            self.beauty.cheekV = value;
         }
             break;
         case FUBeautifyShapeCheekNarrow: {
-            self.beauty.cheekNarrow = [m.mValue floatValue];
+            self.beauty.cheekNarrow = value;
+        }
+            break;
+        case FUBeautifyShapeCheekShort: {
+            self.beauty.cheekShort = value;
         }
             break;
         case FUBeautifyShapeCheekSmall: {
-            self.beauty.cheekSmall = [m.mValue floatValue];
+            self.beauty.cheekSmall = value;
         }
             break;
-        case FUBeautifyShapeIntensityCheekbones: {
-            self.beauty.intensityCheekbones = [m.mValue floatValue];
+        case FUBeautifyShapeCheekbones: {
+            self.beauty.intensityCheekbones = value;
         }
             break;
-        case FUBeautifyShapeIntensityLowerJaw: {
-            self.beauty.intensityLowerJaw = [m.mValue floatValue];
+        case FUBeautifyShapeLowerJaw: {
+            self.beauty.intensityLowerJaw = value;
         }
             break;
         case FUBeautifyShapeEyeEnlarging: {
@@ -80,44 +89,68 @@
             self.beauty.intensityEyeCircle = [m.mValue floatValue];
         }
             break;
-        case FUBeautifyShapeIntensityChin: {
-            self.beauty.intensityChin = [m.mValue floatValue];
+        case FUBeautifyShapeChin: {
+            self.beauty.intensityChin = value;
         }
             break;
-        case FUBeautifyShapeIntensityForehead: {
-            self.beauty.intensityForehead = [m.mValue floatValue];
+        case FUBeautifyShapeForehead: {
+            self.beauty.intensityForehead = value;
         }
             break;
-        case FUBeautifyShapeIntensityNose: {
-            self.beauty.intensityNose = [m.mValue floatValue];
+        case FUBeautifyShapeNose: {
+            self.beauty.intensityNose = value;
         }
             break;
-        case FUBeautifyShapeIntensityMouth: {
-            self.beauty.intensityMouth = [m.mValue floatValue];
+        case FUBeautifyShapeMouth: {
+            self.beauty.intensityMouth = value;
         }
             break;
-        case FUBeautifyShapeIntensityCanthus: {
-            self.beauty.intensityCanthus = [m.mValue floatValue];
+        case FUBeautifyShapeLipThick: {
+            self.beauty.intensityLipThick = value;
         }
             break;
-        case FUBeautifyShapeIntensityEyeSpace: {
-            self.beauty.intensityEyeSpace = [m.mValue floatValue];
+        case FUBeautifyShapeEyeHeight: {
+            self.beauty.intensityEyeHeight = value;
         }
             break;
-        case FUBeautifyShapeIntensityEyeRotate: {
-            self.beauty.intensityEyeRotate = [m.mValue floatValue];
+        case FUBeautifyShapeCanthus: {
+            self.beauty.intensityCanthus = value;
         }
             break;
-        case FUBeautifyShapeIntensityLongNose: {
-            self.beauty.intensityLongNose = [m.mValue floatValue];
+        case FUBeautifyShapeEyeLid: {
+            self.beauty.intensityEyeLid = value;
         }
             break;
-        case FUBeautifyShapeIntensityPhiltrum: {
-            self.beauty.intensityPhiltrum = [m.mValue floatValue];
+        case FUBeautifyShapeEyeSpace: {
+            self.beauty.intensityEyeSpace = value;
         }
             break;
-        case FUBeautifyShapeIntensitySmile: {
-            self.beauty.intensitySmile = [m.mValue floatValue];
+        case FUBeautifyShapeEyeRotate: {
+            self.beauty.intensityEyeRotate = value;
+        }
+            break;
+        case FUBeautifyShapeLongNose: {
+            self.beauty.intensityLongNose = value;
+        }
+            break;
+        case FUBeautifyShapePhiltrum: {
+            self.beauty.intensityPhiltrum = value;
+        }
+            break;
+        case FUBeautifyShapeSmile: {
+            self.beauty.intensitySmile = value;
+        }
+            break;
+        case FUBeautifyShapeBrowHeight: {
+            self.beauty.intensityBrowHeight = value;
+        }
+            break;
+        case FUBeautifyShapeBrowSpace: {
+            self.beauty.intensityBrowSpace = value;
+        }
+            break;
+        case FUBeautifyShapeBrowThick: {
+            self.beauty.intensityBrowThick = value;
         }
             break;
         default:

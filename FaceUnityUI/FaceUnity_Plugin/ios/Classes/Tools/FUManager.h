@@ -67,4 +67,6 @@
 
 /// 获取错误信息
 - (NSString *)getError;
+
++ (void)updateBeautyBlurEffect;
 @end

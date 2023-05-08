@@ -60,4 +60,11 @@ class FUViewModelManagerPlugin {
       "method": "startBeautyStreamListen",
     });
   }
+
+  static Future<int> getPerformanceLevel() async {
+    final int ret = await channel.invokeMethod(viewModelManagerPlugin, {
+      "method": "getPerformanceLevel",
+    });
+    return ret;
+  }
 }

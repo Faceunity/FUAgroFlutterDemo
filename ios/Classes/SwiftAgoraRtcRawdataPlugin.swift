@@ -104,6 +104,24 @@ public class SwiftAgoraRtcRawdataPlugin: NSObject, FlutterPlugin, AgoraAudioFram
             let pointV: UnsafeMutablePointer<UInt8> = transform(videoFrame.vBuffer)
             let imagebuffer = FUImageBufferMakeI420(pointY , pointU, pointV, Int(videoFrame.width),Int(videoFrame.height), Int(videoFrame.yStride), Int(videoFrame.uStride), Int(videoFrame.vStride))
             input.imageBuffer = imagebuffer;
+            
+            if ((FURenderKit.share().beauty == nil) || ((FURenderKit.share().beauty?.enable) == false)) {
+                
+            } else {
+                if (FURenderKit.devicePerformanceLevel() == FUDevicePerformanceLevel.high) {
+                    var score = FUAIKit.fuFaceProcessorGetConfidenceScore(0)
+                    if (score > 0.95) {
+                        FURenderKit.share().beauty?.blurType = 3;
+                        FURenderKit.share().beauty?.blurUseMask = true;
+                    } else {
+                        FURenderKit.share().beauty?.blurType = 2;
+                        FURenderKit.share().beauty?.blurUseMask = false;
+                    }
+                } else {
+                    FURenderKit.share().beauty?.blurType = 2;
+                    FURenderKit.share().beauty?.blurUseMask = false;
+                }
+            }
             FURenderKit.share().render(with: input)
         }
         return true

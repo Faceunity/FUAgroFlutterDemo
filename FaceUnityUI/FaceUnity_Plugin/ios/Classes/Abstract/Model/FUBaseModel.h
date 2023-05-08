@@ -11,7 +11,6 @@
 #import "FUModuleDefine.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
 @interface FUBaseModel : NSObject
 
 @property (nonatomic, strong) NSString *mTitle;
@@ -36,6 +35,11 @@ NS_ASSUME_NONNULL_BEGIN
  * 默认值1.0
  */
 @property (nonatomic, assign) float ratio;
+
+//美肤、美型、滤镜
+@property (nonatomic, assign) int type;
+//美肤、美型、滤镜具体子项
+@property (nonatomic, assign) int subType;
 
 /**
  * seciton is  FUDataType

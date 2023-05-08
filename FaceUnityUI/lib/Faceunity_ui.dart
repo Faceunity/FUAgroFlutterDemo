@@ -2,6 +2,8 @@
 // specifying the `--platforms` flag. A plugin project supports no platforms is generated.
 // To add platforms, run `flutter create -t plugin --platforms <platforms> .` under the same
 // directory. You can also find a detailed instruction on how to add platforms in the `pubspec.yaml` at https://flutter.dev/docs/development/packages-and-plugins/developing-packages#plugin-platforms.
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:ui';
 import 'package:faceunity_ui/Models/BaseModel.dart';
 import 'package:faceunity_ui/ResetDialog.dart';
@@ -9,8 +11,8 @@ import 'package:faceunity_ui/Tools/DialogManager.dart';
 import 'package:faceunity_ui/Tools/FUDataDefine.dart';
 import 'package:faceunity_ui/ViewModels/BaseViewModel.dart';
 import 'package:faceunity_ui/CompareBtn.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 import 'package:faceunity_ui/Tools/ViewModelManager.dart';
@@ -36,19 +38,22 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late final ViewModelManager _viewModelManager;
   late final DialogManager _dialogManager;
-  late final _screenWidth;
+  late FToast _fToast;
+
   @override
   void initState() {
     super.initState();
     _viewModelManager = ViewModelManager();
+    _viewModelManager.getPerformanceLevelFromNative();
     _dialogManager = DialogManager();
-    _screenWidth = window.physicalSize.width / window.devicePixelRatio;
+    _fToast = FToast().init(context);
   }
 
   @override
   void dispose() {
     super.dispose();
     // _viewModelManager.dispose();
+    _fToast.removeQueuedCustomToasts();
   }
 
   @override
@@ -87,7 +92,13 @@ class _HomePageState extends State<HomePage> {
           ResetDialog(() {
             _viewModelManager.reset();
             _dialogManager.isShowDialog = false;
-          }, () => _dialogManager.isShowDialog = false),
+            //刷新一下界面，来通过 isShowDialog 判断是否阻止相芯组件接受点击事件
+            setState(() {});
+          }, () {
+            _dialogManager.isShowDialog = false;
+            //刷新一下界面，来通过 isShowDialog 判断是否阻止相芯组件接受点击事件
+            setState(() {});
+          }),
         ],
       ),
     );
@@ -162,7 +173,6 @@ class _HomePageState extends State<HomePage> {
     return Consumer<ViewModelManager>(builder: (context, manager, child) {
       BaseViewModel viewModel = manager.curViewModel;
       double value = 0.0;
-      int percent;
       String valueStr; //百分比字符串
       //是否以中间为起始点
       bool middle = false;
@@ -180,23 +190,21 @@ class _HomePageState extends State<HomePage> {
 
       if (middle) {
         activeTrackColor = Colors.white;
-        percent = ((value - 0.5) * 100).toInt();
-        valueStr = "$percent";
+        valueStr = ((value - 0.5) * 100).toStringAsFixed(0);
         if ((value - 0.5) > 0) {
           // midleContainerWidth = (value - 0.5) * 100;
         } else {
           // midleContainerWidth = (0.5 - value) * 100;
         }
       } else {
-        percent = (value * 100).toInt();
-        valueStr = "$percent";
+        valueStr = (value * 100).toStringAsFixed(0);
         activeTrackColor = Color(0xFF5EC7FE);
       }
 
       return Container(
         padding: EdgeInsets.fromLTRB(15, 0, 0, 15),
         height: 50,
-        width: _screenWidth,
+        width: double.infinity,
         color: Colors.black,
         child: Stack(
           alignment: Alignment.center,
@@ -222,11 +230,13 @@ class _HomePageState extends State<HomePage> {
                         manager.sliderValueChange(newValue)),
               )),
             ),
-            Container(
-                padding: EdgeInsets.fromLTRB(15, 0, 0, 15),
-                width: middle ? 2 : 0,
-                height: 10,
-                color: Color(0xFF5EC7FE)),
+            Visibility(
+                visible: viewModel.showSlider(),
+                child: Container(
+                    padding: EdgeInsets.fromLTRB(15, 0, 0, 15),
+                    width: middle ? 2 : 0,
+                    height: 10,
+                    color: Color(0xFF5EC7FE))),
           ],
         ),
       );
@@ -239,7 +249,9 @@ class _HomePageState extends State<HomePage> {
     String resetImagepath =
         FUImageTool.getImagePathWithRelativePathPre("Asserts/beauty");
     resetImagepath = resetImagepath + "恢复.png";
-    return Container(
+
+    //这个是要展示的widget，通过判断dialog 弹框是否显示，来确定 改widget 是否接受点击事件
+    Widget widget = Container(
       color: Colors.black,
       width: double.infinity,
       height: 90.0,
@@ -257,6 +269,8 @@ class _HomePageState extends State<HomePage> {
                       if (!manager.isDefaultValue()) {
                         _dialogManager.isShowDialog = true;
                       }
+                      //刷新一下界面，来通过 isShowDialog 判断是否阻止相芯组件接受点击事件
+                      setState(() {});
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -300,6 +314,12 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+    Widget showWidget = _dialogManager.isShowDialog == true
+        ? AbsorbPointer(
+            child: widget,
+          )
+        : widget;
+    return showWidget;
   }
 
   //复用cell
@@ -328,7 +348,8 @@ class _HomePageState extends State<HomePage> {
               },
               itemBuilder: (BuildContext context, int index) {
                 String imagePath =
-                    FUImageTool.selectedImageState(index, viewModel);
+                    FUImageTool.selectedImageStateWithPerformanceLevel(
+                        index, viewModel, _viewModelManager.performanceLevel);
                 String title = dataList[index].title;
                 //是否选中时显示边框
                 bool hasBoard = false;
@@ -339,25 +360,46 @@ class _HomePageState extends State<HomePage> {
                 if (selected == true && viewModel.showBoard()) {
                   hasBoard = true;
                 }
+
+                var enable = _viewModelManager.checkPerforLevelVaild(index);
+
                 return Container(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      GestureDetector(
-                        onTap: () => _viewModelManager.selectedItem(index),
-                        child: Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: hasBoard == true
-                                        ? Color(0xFF5EC7FE)
-                                        : Colors.transparent,
-                                    width: 3.0),
-                                borderRadius: BorderRadius.circular(5.0)),
-                            child: Image(
-                              height: 54.0,
-                              width: 54.0,
-                              image: FUImageTool.getAssertImage(imagePath),
-                            )),
+                      Opacity(
+                        opacity: enable ? 1.0 : 0.7,
+                        child: GestureDetector(
+                          onTap: () {
+                            _viewModelManager.selectedItem(index);
+                            if (!enable) {
+                              _fToast.removeCustomToast();
+                              _fToast.showToast(
+                                child: Text(
+                                  '该功能只支持在高端机上使用',
+                                  style: const TextStyle(
+                                      fontSize: 16.0,
+                                      backgroundColor: Color(0x01000000),
+                                      color: Colors.white),
+                                ),
+                                gravity: ToastGravity.CENTER,
+                              );
+                            }
+                          },
+                          child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: hasBoard == true
+                                          ? Color(0xFF5EC7FE)
+                                          : Colors.transparent,
+                                      width: 3.0),
+                                  borderRadius: BorderRadius.circular(5.0)),
+                              child: Image(
+                                height: 54.0,
+                                width: 54.0,
+                                image: FUImageTool.getAssertImage(imagePath),
+                              )),
+                        ),
                       ),
                       Text(title,
                           style: TextStyle(color: Colors.white, fontSize: 10)),
@@ -386,7 +428,7 @@ class _HomePageState extends State<HomePage> {
       List<BaseViewModel> dataList = manager.viewModelList;
       return Container(
         height: 54,
-        width: _screenWidth,
+        width: double.infinity,
         color: Colors.black,
         child: ListView.separated(
             padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),

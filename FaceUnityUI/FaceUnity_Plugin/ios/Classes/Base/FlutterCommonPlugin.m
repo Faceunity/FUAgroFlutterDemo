@@ -38,7 +38,6 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        [FURenderKit shareRenderKit].delegate = self;
     }
     return self;
 }
