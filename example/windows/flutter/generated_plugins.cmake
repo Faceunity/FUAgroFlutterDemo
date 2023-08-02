@@ -4,7 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   agora_rtc_engine
-  iris_method_channel
+  iris_event
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

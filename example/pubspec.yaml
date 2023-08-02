@@ -19,11 +19,13 @@ dependencies:
     # The example app is bundled with the plugin so we use a path dependency on
     # the parent directory to use the current plugin's version.
     path: ../
+
+  #相芯
   faceunity_ui:
     path: ../FaceUnityUI
 
   # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icpathons.
+  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 
   permission_handler: ^8.3.0
