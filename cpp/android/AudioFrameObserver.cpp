@@ -46,7 +46,7 @@ AudioFrameObserver::~AudioFrameObserver() {
     util::AutoPtr<media::IMediaEngine> mediaEngine;
     mediaEngine.queryInterface(rtcEngine, agora::rtc::AGORA_IID_MEDIA_ENGINE);
     if (mediaEngine) {
-      mediaEngine->registerAudioFrameObserver(nullptr);
+      mediaEngine->registerAudioFrameObserver(this);
     }
   }
 
@@ -62,8 +62,7 @@ AudioFrameObserver::~AudioFrameObserver() {
   jAudioFrameInit = nullptr;
 }
 
-bool AudioFrameObserver::onRecordAudioFrame(const char *channelId,
-                                            AudioFrame &audioFrame) {
+bool AudioFrameObserver::onRecordAudioFrame(const char* channelId, AudioFrame& audioFrame) {
   AttachThreadScoped ats(jvm);
   JNIEnv *env = ats.env();
   jbyteArray arr = NativeToJavaByteArray(env, audioFrame);
@@ -76,8 +75,7 @@ bool AudioFrameObserver::onRecordAudioFrame(const char *channelId,
   return ret;
 }
 
-bool AudioFrameObserver::onPlaybackAudioFrame(const char *channelId,
-                                              AudioFrame &audioFrame) {
+bool AudioFrameObserver::onPlaybackAudioFrame(const char* channelId, AudioFrame& audioFrame) {
   AttachThreadScoped ats(jvm);
   JNIEnv *env = ats.env();
   jbyteArray arr = NativeToJavaByteArray(env, audioFrame);
@@ -90,8 +88,7 @@ bool AudioFrameObserver::onPlaybackAudioFrame(const char *channelId,
   return ret;
 }
 
-bool AudioFrameObserver::onMixedAudioFrame(const char *channelId,
-                                           AudioFrame &audioFrame) {
+bool AudioFrameObserver::onMixedAudioFrame(const char* channelId, AudioFrame& audioFrame) {
   AttachThreadScoped ats(jvm);
   JNIEnv *env = ats.env();
   jbyteArray arr = NativeToJavaByteArray(env, audioFrame);
@@ -105,7 +102,7 @@ bool AudioFrameObserver::onMixedAudioFrame(const char *channelId,
 }
 
 bool AudioFrameObserver::onPlaybackAudioFrameBeforeMixing(
-    const char *channelId, rtc::uid_t uid, AudioFrame &audioFrame) {
+        const char* channelId, rtc::uid_t uid, AudioFrame& audioFrame) {
   AttachThreadScoped ats(jvm);
   JNIEnv *env = ats.env();
   jbyteArray arr = NativeToJavaByteArray(env, audioFrame);
@@ -121,8 +118,8 @@ bool AudioFrameObserver::onPlaybackAudioFrameBeforeMixing(
 
 jbyteArray AudioFrameObserver::NativeToJavaByteArray(JNIEnv *env,
                                                      AudioFrame &audioFrame) {
-  int length = audioFrame.samplesPerChannel * audioFrame.channels *
-               audioFrame.bytesPerSample;
+  int length =
+      audioFrame.samplesPerChannel * audioFrame.channels * audioFrame.bytesPerSample;
 
   jbyteArray jByteArray = env->NewByteArray(length);
 
@@ -137,36 +134,34 @@ jobject AudioFrameObserver::NativeToJavaAudioFrame(JNIEnv *env,
                                                    AudioFrame &audioFrame,
                                                    jbyteArray jByteArray) {
   return env->NewObject(jAudioFrameClass, jAudioFrameInit, (int)audioFrame.type,
-                        audioFrame.samplesPerChannel,
-                        (int)audioFrame.bytesPerSample, audioFrame.channels,
-                        audioFrame.samplesPerSec, jByteArray,
-                        audioFrame.renderTimeMs, audioFrame.avsync_type);
+                        audioFrame.samplesPerChannel, (int)audioFrame.bytesPerSample,
+                        audioFrame.channels, audioFrame.samplesPerSec,
+                        jByteArray, audioFrame.renderTimeMs,
+                        audioFrame.avsync_type);
 }
 
-bool AudioFrameObserver::onEarMonitoringAudioFrame(
-    media::IAudioFrameObserverBase::AudioFrame &audioFrame) {
-  return false;
-}
+    bool AudioFrameObserver::onEarMonitoringAudioFrame(
+            media::IAudioFrameObserverBase::AudioFrame &audioFrame) {
+        return false;
+    }
 
-int AudioFrameObserver::getObservedAudioFramePosition() { return 0; }
+    int AudioFrameObserver::getObservedAudioFramePosition() {
+        return 0;
+    }
 
-media::IAudioFrameObserverBase::AudioParams
-AudioFrameObserver::getPlaybackAudioParams() {
-  return media::IAudioFrameObserverBase::AudioParams();
-}
+    media::IAudioFrameObserverBase::AudioParams AudioFrameObserver::getPlaybackAudioParams() {
+        return media::IAudioFrameObserverBase::AudioParams();
+    }
 
-media::IAudioFrameObserverBase::AudioParams
-AudioFrameObserver::getRecordAudioParams() {
-  return media::IAudioFrameObserverBase::AudioParams();
-}
+    media::IAudioFrameObserverBase::AudioParams AudioFrameObserver::getRecordAudioParams() {
+        return media::IAudioFrameObserverBase::AudioParams();
+    }
 
-media::IAudioFrameObserverBase::AudioParams
-AudioFrameObserver::getMixedAudioParams() {
-  return media::IAudioFrameObserverBase::AudioParams();
-}
+    media::IAudioFrameObserverBase::AudioParams AudioFrameObserver::getMixedAudioParams() {
+        return media::IAudioFrameObserverBase::AudioParams();
+    }
 
-media::IAudioFrameObserverBase::AudioParams
-AudioFrameObserver::getEarMonitoringAudioParams() {
-  return media::IAudioFrameObserverBase::AudioParams();
-}
+    media::IAudioFrameObserverBase::AudioParams AudioFrameObserver::getEarMonitoringAudioParams() {
+        return media::IAudioFrameObserverBase::AudioParams();
+    }
 } // namespace agora

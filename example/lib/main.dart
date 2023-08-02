@@ -67,20 +67,15 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       startPreview = true;
     });
+    var handle = await engine.getNativeHandle();
+    await AgoraRtcRawdata.registerAudioFrameObserver(handle);
+    await AgoraRtcRawdata.registerVideoFrameObserver(handle);
 
     await engine.joinChannel(
         token: config.token,
         channelId: config.channelId,
         uid: config.uid,
-        options: ChannelMediaOptions(clientRoleType: ClientRoleType.clientRoleBroadcaster));
-    await engine.setRecordingAudioFrameParameters(
-        sampleRate: 48000,
-        channel: 2,
-        mode: RawAudioFrameOpModeType.rawAudioFrameOpModeReadOnly,
-        samplesPerCall: 1024);
-    var handle = await engine.getNativeHandle();
-    await AgoraRtcRawdata.registerAudioFrameObserver(handle);
-    await AgoraRtcRawdata.registerVideoFrameObserver(handle);
+        options: ChannelMediaOptions());
   }
 
   _deinitEngine() async {
@@ -92,7 +87,8 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
+        home: SafeArea(
+      child: Scaffold(
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
@@ -128,6 +124,7 @@ class _MyAppState extends State<MyApp> {
                 ),
               ),
             ),
+
             //传camera 回调显示 UI，不传不显示
             FaceunityUI(
               cameraCallback: () => engine.switchCamera(),
@@ -135,6 +132,6 @@ class _MyAppState extends State<MyApp> {
           ],
         ),
       ),
-    );
+    ));
   }
 }
