@@ -61,15 +61,15 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
         MSG_FACEUNITY -> synchronized(plugin.renderLock) {
 
           try {
-              val handle = EGL14.eglGetCurrentContext().handle
+            val handle = EGL14.eglGetCurrentContext().handle
             Log.d(TAG, "handleMessage: MSG_FACEUNITY： $handle")
 
             if (handle <= 0) {
-                  // 不存在egl环境，重新创建
-                  FURenderKit.getInstance().createEGLContext()
-              }
+              // 不存在egl环境，重新创建
+              FURenderKit.getInstance().createEGLContext()
+            }
           }catch (_: UnsupportedOperationException) {
-              // 存在egl环境
+            // 存在egl环境
           }
 
           if (plugin.deviceLevel > FuDeviceUtils.DEVICE_LEVEL_MID) {
@@ -155,8 +155,11 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
       "registerVideoFrameObserver" -> {
         if (videoObserver == null) {
           videoObserver = object : IVideoFrameObserver((call.arguments as Number).toLong()) {
-            override fun onCaptureVideoFrame(videoFrame: VideoFrame): Boolean {
+            private var oldRotation = 0
+            private var skipFrame = SKIP_FRAME
 
+            override fun onCaptureVideoFrame(sourceType: Int, videoFrame: VideoFrame): Boolean {
+              Log.d(TAG, "handleMessage: onCaptureVideoFrame: sourceType:$sourceType, rotation:${videoFrame.rotation}, width: ${videoFrame.width}, height: ${videoFrame.height}")
               /** 这个回调不一定在同一线程执行 */
               synchronized(renderLock) {
                 if (fuRenderInputData == null) {
@@ -166,30 +169,42 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
                   /** 部分机型前几帧的宽高和后面不同 **/
                   fuRenderInputData = FURenderInputData(videoFrame.getyStride(), videoFrame.height)
                 }
+                if (oldRotation != videoFrame.rotation) {
+                  oldRotation = videoFrame.rotation
+                  skipFrame = SKIP_FRAME
+                }
                 fuRenderInputData!!.apply {
 
                   val i420 = videoFrame.getyBuffer() + videoFrame.getuBuffer() + videoFrame.getvBuffer()
                   imageBuffer = FURenderInputData.FUImageBuffer(FUInputBufferEnum.FU_FORMAT_I420_BUFFER, i420)
                   renderConfig.apply {
                     isNeedBufferReturn = true
-                    cameraFacing = CameraFacingEnum.CAMERA_FRONT
-                    inputOrientation = 270
-                    inputBufferMatrix = FUTransformMatrixEnum.CCROT0_FLIPVERTICAL
-                    inputTextureMatrix = FUTransformMatrixEnum.CCROT0_FLIPVERTICAL
-                    outputMatrix = FUTransformMatrixEnum.CCROT0
+                    inputOrientation = 360 - videoFrame.rotation
+                    if (videoFrame.rotation == 270) {
+                      //前置
+                      cameraFacing = CameraFacingEnum.CAMERA_FRONT
+                      inputBufferMatrix = FUTransformMatrixEnum.CCROT0_FLIPVERTICAL
+                      inputTextureMatrix = FUTransformMatrixEnum.CCROT0_FLIPVERTICAL
+                      outputMatrix = FUTransformMatrixEnum.CCROT0
+                    }else {
+                      cameraFacing = CameraFacingEnum.CAMERA_BACK
+                      inputBufferMatrix = FUTransformMatrixEnum.CCROT0
+                      inputTextureMatrix = FUTransformMatrixEnum.CCROT0
+                      outputMatrix = FUTransformMatrixEnum.CCROT0_FLIPVERTICAL
+                    }
                   }
                 }
                 if (renderStop) {
-                    return true
+                  return true
                 }
                 fuHandler?.sendEmptyMessage(MSG_FACEUNITY)
                 renderLock.wait()
-                videoFrame.apply {
-
-                  System.arraycopy(fuRenderOutputData!!.image!!.buffer!!, 0, getyBuffer(), 0, getyBuffer().size)
-                  System.arraycopy(fuRenderOutputData!!.image!!.buffer!!, getyBuffer().size, getuBuffer(), 0, getuBuffer().size)
-                  System.arraycopy(fuRenderOutputData!!.image!!.buffer!!, getyBuffer().size + getuBuffer().size, getvBuffer(), 0, getvBuffer().size)
-
+                if (skipFrame-- < 0) {
+                  videoFrame.apply {
+                    System.arraycopy(fuRenderOutputData!!.image!!.buffer!!, 0, getyBuffer(), 0, getyBuffer().size)
+                    System.arraycopy(fuRenderOutputData!!.image!!.buffer!!, getyBuffer().size, getuBuffer(), 0, getuBuffer().size)
+                    System.arraycopy(fuRenderOutputData!!.image!!.buffer!!, getyBuffer().size + getuBuffer().size, getvBuffer(), 0, getvBuffer().size)
+                  }
                 }
               }
               return true
@@ -255,5 +270,6 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
     private const val MSG_FACEUNITY = 0x01
     private const val MSG_EGL_CREATE = 0x02
     private const val MSG_EGL_RELEASE = 0x03
+    private const val SKIP_FRAME = 2
   }
 }
