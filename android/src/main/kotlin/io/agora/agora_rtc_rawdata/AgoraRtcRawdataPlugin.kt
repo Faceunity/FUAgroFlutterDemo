@@ -62,7 +62,7 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
 
           try {
             val handle = EGL14.eglGetCurrentContext().handle
-            Log.d(TAG, "handleMessage: MSG_FACEUNITY： $handle")
+            // Log.d(TAG, "handleMessage: MSG_FACEUNITY： $handle")
 
             if (handle <= 0) {
               // 不存在egl环境，重新创建
@@ -79,7 +79,7 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
 
           plugin.fuRenderOutputData = FURenderKit.getInstance().renderWithInput(plugin.fuRenderInputData!!)
           plugin.renderLock.notifyAll()
-          Log.d(TAG, "handleMessage: MSG_FACEUNITY")
+          // Log.d(TAG, "handleMessage: MSG_FACEUNITY")
         }
         MSG_EGL_CREATE -> synchronized(plugin.renderLock) {
           // 因为 gles 的创建是在 raw_data 这个插件 onAttachedToEngine方法中调用，
@@ -89,12 +89,12 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
             SystemClock.sleep(100)
           }
           FURenderKit.getInstance().createEGLContext()
-          Log.d(TAG, "handleMessage: MSG_EGL_CREATE")
+          // Log.d(TAG, "handleMessage: MSG_EGL_CREATE")
         }
         MSG_EGL_RELEASE -> {
           FURenderKit.getInstance().releaseEGLContext()
           FURenderKit.getInstance().releaseSafe()
-          Log.d(TAG, "handleMessage: MSG_EGL_RELEASE")
+          // Log.d(TAG, "handleMessage: MSG_EGL_RELEASE")
         }
         else -> {}
       }
@@ -159,7 +159,7 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
             private var skipFrame = SKIP_FRAME
 
             override fun onCaptureVideoFrame(sourceType: Int, videoFrame: VideoFrame): Boolean {
-              Log.d(TAG, "handleMessage: onCaptureVideoFrame: sourceType:$sourceType, rotation:${videoFrame.rotation}, width: ${videoFrame.width}, height: ${videoFrame.height}")
+              // Log.d(TAG, "handleMessage: onCaptureVideoFrame: sourceType:$sourceType, rotation:${videoFrame.rotation}, width: ${videoFrame.width}, height: ${videoFrame.height}")
               /** 这个回调不一定在同一线程执行 */
               synchronized(renderLock) {
                 if (fuRenderInputData == null) {
