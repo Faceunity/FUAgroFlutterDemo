@@ -1,0 +1,32 @@
+[
+    {
+        "filterKey":"origin",
+        "filterName":"原图",
+        "filterLevel":0.0
+    },
+    {
+        "filterKey":"ziran1",
+        "filterName":"自然1",
+        "filterLevel":0.4
+    },
+    {
+        "filterKey":"zhiganhui1",
+        "filterName":"质感灰1",
+        "filterLevel":0.4
+    },
+    {
+        "filterKey":"bailiang1",
+        "filterName":"白亮1",
+        "filterLevel":0.4
+    },
+    {
+        "filterKey":"fennen1",
+        "filterName":"粉嫩1",
+        "filterLevel":0.4
+    },
+    {
+        "filterKey":"lengsediao1",
+        "filterName":"冷色调",
+        "filterLevel":0.4
+    }
+]

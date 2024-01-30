@@ -97,6 +97,8 @@ public class SwiftAgoraRtcRawdataPlugin: NSObject, FlutterPlugin, AgoraAudioFram
                 //该属性是指系统相机是否做了镜像: 一般情况前置摄像头出来的帧都是设置过镜像，所以默认需要设置下。如果相机属性未设置镜像，改属性不用设置。
                 //实际测试发现图片帧没有镜像所以此属性设置false
                 input.renderConfig.isFromMirroredCamera = false
+                //贴纸强制左右镜像
+                input.renderConfig.stickerFlipH = true;
                 
                 let pointY: UnsafeMutablePointer<UInt8> = transform(videoFrame.yBuffer)
                 let pointU: UnsafeMutablePointer<UInt8> = transform(videoFrame.uBuffer)
@@ -104,11 +106,9 @@ public class SwiftAgoraRtcRawdataPlugin: NSObject, FlutterPlugin, AgoraAudioFram
                 let imagebuffer = FUImageBufferMakeI420(pointY , pointU, pointV, Int(videoFrame.width),Int(videoFrame.height), Int(videoFrame.yStride), Int(videoFrame.uStride), Int(videoFrame.vStride))
                 input.imageBuffer = imagebuffer;
                 
-                if ((FURenderKit.share().beauty == nil) || ((FURenderKit.share().beauty?.enable) == false)) {
-                    
-                } else {
-                    if (FURenderKit.devicePerformanceLevel() == FUDevicePerformanceLevel.high) {
-                        var score = FUAIKit.fuFaceProcessorGetConfidenceScore(0)
+                if (FURenderKit.share().beauty != nil && FURenderKit.share().beauty?.enable == true) {
+                    if (Int(FURenderKit.devicePerformanceLevel().rawValue) >= Int(FUDevicePerformanceLevel.high.rawValue)) {
+                        let score = FUAIKit.fuFaceProcessorGetConfidenceScore(0)
                         if (score > 0.95) {
                             FURenderKit.share().beauty?.blurType = 3;
                             FURenderKit.share().beauty?.blurUseMask = true;
@@ -120,6 +120,7 @@ public class SwiftAgoraRtcRawdataPlugin: NSObject, FlutterPlugin, AgoraAudioFram
                         FURenderKit.share().beauty?.blurType = 2;
                         FURenderKit.share().beauty?.blurUseMask = false;
                     }
+
                 }
                 FURenderKit.share().render(with: input)
             }

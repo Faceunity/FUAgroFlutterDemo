@@ -6,7 +6,7 @@ import 'package:agora_rtc_rawdata_example/config/agora.config.dart' as config;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:faceunity_ui/Faceunity_ui.dart';
+import 'package:faceunity_ui_flutter/faceunity_ui_flutter.dart';
 
 void main() {
   runApp(MyApp());
@@ -64,6 +64,8 @@ class _MyAppState extends State<MyApp> {
     }));
     await engine.enableVideo();
     await engine.startPreview();
+    await engine.muteLocalAudioStream(true);
+    await engine.muteAllRemoteAudioStreams(true);
     setState(() {
       startPreview = true;
     });
@@ -129,9 +131,10 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
             //传camera 回调显示 UI，不传不显示
-            FaceunityUI(
-              cameraCallback: () => engine.switchCamera(),
-            )
+            // FaceunityUI(
+            //   cameraCallback: () => engine.switchCamera(),
+            // )
+            FaceunityUI()
           ],
         ),
       ),
