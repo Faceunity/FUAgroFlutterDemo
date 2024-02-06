@@ -50,9 +50,13 @@ public abstract class IVideoFrameObserver {
   }
 
   public void unregisterVideoFrameObserver() {
-    if (nativeHandle != 0) {
-      nativeUnregisterVideoFrameObserver(nativeHandle);
-      nativeHandle = 0;
+    try {
+      if (nativeHandle != 0) {
+        nativeUnregisterVideoFrameObserver(nativeHandle);
+        nativeHandle = 0;
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 
