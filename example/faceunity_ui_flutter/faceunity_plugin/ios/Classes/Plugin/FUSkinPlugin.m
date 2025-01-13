@@ -63,4 +63,13 @@ typedef NS_ENUM(NSUInteger, FUBeautySkin) {
     }
 }
 
+- (void)setBeautyParam:(NSString *)key value:(NSNumber *)value{
+    
+    NSLog(@"key = %@, value = %d",key,value.intValue);
+    
+    if([key isEqualToString:@"enable_skinseg"]){
+        [FURenderKit shareRenderKit].beauty.enableSkinSegmentation = value.boolValue;
+    }
+}
+
 @end

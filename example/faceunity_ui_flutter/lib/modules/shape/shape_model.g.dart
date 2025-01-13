@@ -12,7 +12,7 @@ ShapeModel _$ShapeModelFromJson(Map<String, dynamic> json) => ShapeModel(
       (json['currentValue'] as num).toDouble(),
       (json['defaultValue'] as num).toDouble(),
       json['defaultValueInMiddle'] as bool,
-      json['differentiateDevicePerformance'] as bool,
+      (json['supportDeviceLevel'] as num).toInt(),
     );
 
 Map<String, dynamic> _$ShapeModelToJson(ShapeModel instance) =>
@@ -22,7 +22,7 @@ Map<String, dynamic> _$ShapeModelToJson(ShapeModel instance) =>
       'currentValue': instance.currentValue,
       'defaultValue': instance.defaultValue,
       'defaultValueInMiddle': instance.defaultValueInMiddle,
-      'differentiateDevicePerformance': instance.differentiateDevicePerformance,
+      'supportDeviceLevel': instance.supportDeviceLevel,
     };
 
 const _$BeautyShapeEnumMap = {

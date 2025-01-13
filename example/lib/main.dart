@@ -62,8 +62,10 @@ class _MyAppState extends State<MyApp> {
         remoteUid.remove(rUid);
       });
     }));
+    await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
     await engine.enableVideo();
     await engine.startPreview();
+    //TODO 静音
     await engine.muteLocalAudioStream(true);
     await engine.muteAllRemoteAudioStreams(true);
     setState(() {
@@ -88,6 +90,7 @@ class _MyAppState extends State<MyApp> {
   _deinitEngine() async {
     await AgoraRtcRawdata.unregisterAudioFrameObserver();
     await AgoraRtcRawdata.unregisterVideoFrameObserver();
+    await engine.leaveChannel();
     await engine.release();
   }
 

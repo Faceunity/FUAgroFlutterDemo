@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FURenderKitManager : NSObject
 
 /// 当前设备性能等级
-@property (nonatomic, assign, readonly) FUDevicePerformanceLevel devicePerformanceLevel;
+@property (nonatomic, assign, readonly) FUDevicePerformanceLevel deviceLevel;
 
 @property (nonatomic, assign, readonly) BOOL isEffectsOn;
 
@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)destoryRenderKit;
 
 /// 设备是否高端机型
-- (NSNumber *)isHighPerformanceDevice;
+- (NSNumber *)devicePerformanceLevel;
 
 /// 设备是否支持 NPU
 - (NSNumber *)isNPUSupported;

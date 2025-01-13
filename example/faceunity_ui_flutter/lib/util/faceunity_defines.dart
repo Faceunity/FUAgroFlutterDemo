@@ -1,5 +1,14 @@
 import 'package:json_annotation/json_annotation.dart';
 
+class DevicePerformanceLevel {
+  static int levelMinusOne = -1;
+  static int levelOne = 1;
+  static int levelTwo = 2;
+  static int levelThree = 3;
+  static int levelFour = 4;
+}
+
+
 enum ModuleType {
   skin(0),
   shape(1),
@@ -7,7 +16,7 @@ enum ModuleType {
   sticker(3),
   makeup(4),
   body(5);
-  
+
   const ModuleType(this.number);
   final int number;
 }
@@ -43,7 +52,7 @@ enum BeautySkin {
   @JsonValue(9)
   antiAcneSpot(9),  // 祛斑痘
 
-  @JsonValue(10)  
+  @JsonValue(10)
   clarity(10);  // 清晰
 
   const BeautySkin(this.number);
@@ -82,49 +91,49 @@ enum BeautyShape {
   @JsonValue(9)
   chin(9),  // 下巴
 
-  @JsonValue(10)  
+  @JsonValue(10)
   forehead(10),  // 额头
 
-  @JsonValue(11)  
+  @JsonValue(11)
   nose(11),  // 瘦鼻
 
-  @JsonValue(12)  
+  @JsonValue(12)
   mouth(12),  // 嘴型
 
-  @JsonValue(13)  
+  @JsonValue(13)
   lipThick(13),  // 嘴唇厚度
 
-  @JsonValue(14)  
+  @JsonValue(14)
   eyeHeight(14),  // 眼睛位置
 
-  @JsonValue(15)  
+  @JsonValue(15)
   canthus(15),  // 开眼角
 
-  @JsonValue(16)  
+  @JsonValue(16)
   eyeLid(16), // 眼睑下至
 
-  @JsonValue(17)  
+  @JsonValue(17)
   eyeSpace(17),  // 眼距
 
-  @JsonValue(18)  
+  @JsonValue(18)
   eyeRotate(18),  // 眼睛角度
 
-  @JsonValue(19)  
+  @JsonValue(19)
   longNose(19),  // 长鼻
 
-  @JsonValue(20)  
+  @JsonValue(20)
   philtrum(20),  // 缩人中
 
-  @JsonValue(21)  
+  @JsonValue(21)
   smile(21),  // 微笑嘴角
 
-  @JsonValue(22)  
+  @JsonValue(22)
   browHeight(22), // 眉毛上下
 
-  @JsonValue(23)  
+  @JsonValue(23)
   browSpace(23),  // 眉间距
 
-  @JsonValue(24)  
+  @JsonValue(24)
   browThick(24); // 眉毛粗细
 
   const BeautyShape(this.number);
@@ -133,7 +142,7 @@ enum BeautyShape {
 
 enum BeautyBody {
   @JsonValue(0)
-  slim(0),  // 瘦身       
+  slim(0),  // 瘦身
 
   @JsonValue(1)
   longLeg(1), // 长腿

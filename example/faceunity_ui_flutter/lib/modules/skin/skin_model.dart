@@ -14,12 +14,28 @@ class SkinModel {
   bool defaultValueInMiddle;
   double ratio;
   /// 是否区分高低端机
-  bool differentiateDevicePerformance;
-  /// 是否需要 NPU 支持
-  bool needsNPUSupport;
+  int supportDeviceLevel;
 
-  SkinModel(this.name, this.type, this.currentValue, this.defaultValue, this.defaultValueInMiddle, this.ratio, this.differentiateDevicePerformance, this.needsNPUSupport);
+  SkinExtraModel? extra;
+
+  SkinModel(this.name, this.type, this.currentValue, this.defaultValue, this.defaultValueInMiddle, this.ratio, this.supportDeviceLevel, this.extra);
 
   factory SkinModel.fromJson(Map<String, dynamic> json) => _$SkinModelFromJson(json);
   Map<String, dynamic> toJson() => _$SkinModelToJson(this);
+}
+
+@JsonSerializable()
+class SkinExtraModel {
+  String key;
+  String title;
+  double value;
+  double defaultValue;
+  String leftText;
+  String rightText;
+  int supportDeviceLevel;
+
+  SkinExtraModel(this.key, this.title, this.value, this.defaultValue, this.leftText, this.rightText, this.supportDeviceLevel);
+
+  factory SkinExtraModel.fromJson(Map<String, dynamic> json) => _$SkinExtraModelFromJson(json);
+  Map<String, dynamic> toJson() => _$SkinExtraModelToJson(this);
 }

@@ -17,4 +17,7 @@ object FaceunityConfig {
     var BUNDLE_FACE_MAKEUP = "graphics" + File.separator + "face_makeup.bundle"
     val BUNDLE_BODY_BEAUTY = "graphics" + File.separator + "body_slim.bundle"
 
+    @JvmField
+    val BLACK_LIST: String = "config" + File.separator + "blackList.json"
+
 }
