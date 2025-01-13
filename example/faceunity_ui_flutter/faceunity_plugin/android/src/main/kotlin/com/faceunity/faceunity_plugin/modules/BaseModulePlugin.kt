@@ -2,10 +2,8 @@ package com.faceunity.faceunity_plugin.modules
 
 import com.faceunity.core.faceunity.FURenderKit
 import com.faceunity.core.utils.FULogger
-import com.faceunity.faceunity_plugin.FuDeviceUtils
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import kotlin.reflect.KFunction
 
 /**
  *

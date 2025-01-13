@@ -13,6 +13,11 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+
 
 /** FaceunityPlugin */
 class FaceunityPlugin : FlutterPlugin, MethodCallHandler{
@@ -27,6 +32,8 @@ class FaceunityPlugin : FlutterPlugin, MethodCallHandler{
     private val bodyPlugin by lazy { FUBodyBeautyPlugin() }
     private val sensorHandler by lazy { SensorHandler() }
     private lateinit var context: Context
+    private val mainScope = MainScope()
+
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "faceunity_plugin")
@@ -49,6 +56,7 @@ class FaceunityPlugin : FlutterPlugin, MethodCallHandler{
         channel.setMethodCallHandler(null)
         //单页面不会走flutter widget dispose 逻辑，所以在这做一次兜底
         destroyRenderKit()
+        mainScope.cancel()
     }
 
     private fun methodCall(call: MethodCall, @NonNull result: Result) {
@@ -57,8 +65,8 @@ class FaceunityPlugin : FlutterPlugin, MethodCallHandler{
                 result.success("Android ${android.os.Build.VERSION.RELEASE}")
             }
 
-            "isHighPerformanceDevice" -> {
-                result.success(FaceunityKit.devicePerformanceLevel == FuDeviceUtils.DEVICE_LEVEL_HIGH)
+            "devicePerformanceLevel" -> {
+                result.success(FaceunityKit.devicePerformanceLevel)
             }
 
             "isNPUSupported" -> {
@@ -74,6 +82,7 @@ class FaceunityPlugin : FlutterPlugin, MethodCallHandler{
             }
             "setupRenderKit" -> setupRenderKit()
             "destoryRenderKit" -> destroyRenderKit()
+            "restrictedSkinParams" -> restrictedSkinParams(call, result)
         }
     }
 
@@ -100,5 +109,11 @@ class FaceunityPlugin : FlutterPlugin, MethodCallHandler{
             FaceunityKit.releaseKit()
         }
         OffLineRenderHandler.getInstance().onPause()
+    }
+
+      private fun restrictedSkinParams(call: MethodCall, result: Result) {
+        mainScope.launch(Dispatchers.IO) {
+            result.success(RestrictedSkinTool.restrictedSkinParams)
+        }
     }
 }

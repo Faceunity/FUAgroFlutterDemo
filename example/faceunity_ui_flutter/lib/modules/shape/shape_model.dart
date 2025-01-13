@@ -13,9 +13,9 @@ class ShapeModel {
   /// 默认值是否中位数
   bool defaultValueInMiddle;
   /// 是否区分高低端机
-  bool differentiateDevicePerformance;
+  int supportDeviceLevel;
 
-  ShapeModel(this.name, this.type, this.currentValue, this.defaultValue, this.defaultValueInMiddle, this.differentiateDevicePerformance);
+  ShapeModel(this.name, this.type, this.currentValue, this.defaultValue, this.defaultValueInMiddle, this.supportDeviceLevel);
 
   factory ShapeModel.fromJson(Map<String, dynamic> json) => _$ShapeModelFromJson(json);
   Map<String, dynamic> toJson() => _$ShapeModelToJson(this);

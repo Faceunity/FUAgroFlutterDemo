@@ -5,7 +5,7 @@ import com.faceunity.core.model.makeup.Makeup
 import com.faceunity.core.model.makeup.SimpleMakeup
 import com.faceunity.faceunity_plugin.FaceunityConfig
 import com.faceunity.faceunity_plugin.FaceunityKit
-import com.faceunity.faceunity_plugin.FuDeviceUtils
+import com.faceunity.faceunity_plugin.utils.FuDeviceUtils
 import io.flutter.plugin.common.MethodChannel
 
 /**
@@ -44,7 +44,7 @@ class FUMakeupPlugin : BaseModulePlugin() {
             }
         }
         makeup.makeupIntensity = intensity
-        makeup.machineLevel = FaceunityKit.devicePerformanceLevel == FuDeviceUtils.DEVICE_LEVEL_HIGH
+        makeup.machineLevel = FaceunityKit.devicePerformanceLevel > FuDeviceUtils.DEVICE_LEVEL_ONE
         makeup.enable = FaceunityKit.isEffectsOn
         renderKit.makeup = makeup
     }

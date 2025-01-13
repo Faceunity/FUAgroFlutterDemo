@@ -14,6 +14,7 @@ import 'package:faceunity_ui_flutter/modules/makeup/makeup_view.dart';
 import 'package:faceunity_ui_flutter/modules/shape/shape_view.dart';
 import 'package:faceunity_ui_flutter/modules/skin/skin_view.dart';
 import 'package:faceunity_ui_flutter/modules/sticker/sticker_view.dart';
+import 'package:faceunity_ui_flutter/util/common_util.dart';
 import 'package:faceunity_ui_flutter/util/faceunity_defines.dart';
 import 'package:flutter/material.dart';
 
@@ -39,11 +40,18 @@ class FaceunityWidget extends StatefulWidget {
 class FaceunityWidgetState extends State<FaceunityWidget> {
   // 当前选中的功能栏索引
   int selectedIndex = -1;
+  // 设备性能等级
+  late int _devicePerformanceLevel = DevicePerformanceLevel.levelTwo;
 
   @override
   void initState() {
     FaceunityPlugin.setupRenderKit();
     super.initState();
+    FaceunityPlugin.devicePerformanceLevel().then((value) => {
+      setState(() {
+        _devicePerformanceLevel = value;
+      })
+    });
   }
 
   @override
@@ -54,6 +62,7 @@ class FaceunityWidgetState extends State<FaceunityWidget> {
 
   @override
   Widget build(BuildContext context) {
+    bool enableMakeup = _devicePerformanceLevel >= DevicePerformanceLevel.levelOne;
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
@@ -92,7 +101,7 @@ class FaceunityWidgetState extends State<FaceunityWidget> {
             child: const FilterView(),
           )
         ),
-        
+
         // 贴纸
         Positioned(
           left: 0,
@@ -138,10 +147,11 @@ class FaceunityWidgetState extends State<FaceunityWidget> {
           child: Container(
             color: const Color.fromARGB(255, 5, 15, 20),
             child: SegmentBar(
-              onChange: (index) {
-                setState(() {
+              onChange: (index, enable) {
+                if (enable) {
                   selectedIndex = index;
-
+                }
+                setState(() {
                   switch (ModuleType.values[index]) {
                     case ModuleType.skin:
                     case ModuleType.shape:
@@ -159,13 +169,17 @@ class FaceunityWidgetState extends State<FaceunityWidget> {
                       FaceunityPlugin.setMaximumFacesNumber(4);
                       break;
                     case ModuleType.makeup:
-                      FaceunityPlugin.setMaximumFacesNumber(4);
+                      if (enable) {
+                        FaceunityPlugin.setMaximumFacesNumber(4);
+                      }else {
+                        showCommonToast(context: context, content: "该功能只支持在高端机上使用");
+                      }
                       break;
                     default:
                   }
                 });
-              }, 
-              items: const ["美肤", "美型", "滤镜", "贴纸", "美妆", "美体"]
+              },
+              items: [BarItem("美肤"), BarItem("美型"), BarItem("滤镜"), BarItem("贴纸"), BarItem("美妆", enable: enableMakeup), BarItem("美体")]
             ),
           )
         ),
@@ -180,11 +194,11 @@ class FaceunityWidgetState extends State<FaceunityWidget> {
               onChanged: (value) {
                 value ? FaceunityPlugin.turnOnEffects() : FaceunityPlugin.turnOffEffects();
               },
-            ) 
+            )
           )
         )
       ],
     );
-    
+
   }
 }

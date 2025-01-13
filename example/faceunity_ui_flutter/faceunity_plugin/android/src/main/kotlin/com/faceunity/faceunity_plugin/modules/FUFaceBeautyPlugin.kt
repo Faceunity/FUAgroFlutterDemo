@@ -1,8 +1,11 @@
 package com.faceunity.faceunity_plugin.modules
 
 import com.faceunity.core.faceunity.FUAIKit
+import com.faceunity.core.utils.DecimalUtils
 import com.faceunity.faceunity_plugin.FaceunityKit
 import io.flutter.plugin.common.MethodChannel
+import android.util.Log
+import com.faceunity.core.controller.facebeauty.FaceBeautyParam
 
 /**
  *
@@ -21,10 +24,12 @@ class FUFaceBeautyPlugin : BaseModulePlugin() {
         "loadBeauty" to ::loadBeauty,
         "unloadBody" to ::unloadBody,
         "setMaximumFacesNumber" to ::setMaximumFacesNumber,
+        "setBeautyParam" to ::setBeautyParam,
     )
 
 
     private fun setSkinIntensity(params: Map<String, Any>, result: MethodChannel.Result) {
+        Log.d("benyq", "facebeauty setSkinIntensity")
         val value = params["intensity"] as? Double ?: return
         val type = params["type"] as? Int ?: return
 
@@ -42,9 +47,7 @@ class FUFaceBeautyPlugin : BaseModulePlugin() {
             SkinEnum.FUBeautySkinRemoveNasolabialFoldsStrength -> renderKit.faceBeauty?.removeLawPatternIntensity =
                 value
 
-            SkinEnum.FUBeautySkinAntiAcneSpot -> {
-                // 未实现
-            }
+            SkinEnum.FUBeautySkinAntiAcneSpot -> renderKit.faceBeauty?.delspotIntensity = value
 
             SkinEnum.FUBeautySkinClarity -> renderKit.faceBeauty?.clarityIntensity = value
             else -> {}
@@ -120,6 +123,18 @@ class FUFaceBeautyPlugin : BaseModulePlugin() {
     private fun setMaximumFacesNumber(params: Map<String, Any>, result: MethodChannel.Result) {
         val maxFaceNumber = params["number"] as? Int ?: return
         FUAIKit.getInstance().maxFaces = maxFaceNumber.coerceIn(1, 4)
+    }
+
+    private fun setBeautyParam(params: Map<String, Any>, result: MethodChannel.Result) {
+        val key = params.getString("key") ?: return
+        val value = params.get("value") ?: return
+        setBeautyParam(key, value)
+    }
+
+    private fun setBeautyParam(key: String, value: Any) {
+        when(key) {
+          FaceBeautyParam.ENABLE_SKIN_SEG -> renderKit.faceBeauty?.enableSkinSeg = DecimalUtils.doubleEquals(value as Double, 1.0)
+        }
     }
 
 

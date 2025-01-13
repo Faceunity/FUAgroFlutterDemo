@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setSkinIntensity:(NSNumber *)intensity type:(NSNumber *)type;
 
+- (void)setBeautyParam:(NSString *)key value:(NSNumber *)value;
+
 @end
 
 NS_ASSUME_NONNULL_END

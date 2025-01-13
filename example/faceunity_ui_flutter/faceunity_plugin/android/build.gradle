@@ -53,9 +53,9 @@ android {
     dependencies {
         testImplementation 'org.jetbrains.kotlin:kotlin-test'
         testImplementation 'org.mockito:mockito-core:5.0.0'
-        api 'com.faceunity:core:8.8.1'
-        api 'com.faceunity:model:8.8.1'
-
+        api 'com.faceunity:core:8.13.0'
+        api 'com.faceunity:model:8.13.0'
+        implementation 'com.google.code.gson:gson:2.8.9'
     }
 
     testOptions {

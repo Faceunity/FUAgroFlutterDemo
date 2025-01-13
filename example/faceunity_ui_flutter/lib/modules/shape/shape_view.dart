@@ -42,7 +42,7 @@ class ShapeViewState extends State<ShapeView> {
                 verticalDirection: VerticalDirection.up,
                 children: [
                   _providerList(width),
-                  viewModel.selectedIndex >= 0 ? 
+                  viewModel.selectedIndex >= 0 ?
                   SizedBox(
                     height: 50,
                     width: width - 112,
@@ -89,14 +89,14 @@ class ShapeViewState extends State<ShapeView> {
                 onPressed: () {
                   if (!isDefault) {
                     showAlertDialog(
-                      context: context, 
+                      context: context,
                       content: "是否将所有参数恢复到默认值",
                       comformPressed: () {
                         viewModel.recoverAllShapeValuesToDefault();
                       },
                     );
                   }
-                }, 
+                },
                 child: Column(
                   children: [
                     SizedBox(
@@ -144,12 +144,7 @@ class ShapeViewState extends State<ShapeView> {
   Widget _itemCell(int index) {
     ShapeModel shape = viewModel.shapes[index];
     String name = shape.name;
-    bool needsHighPerformance = shape.differentiateDevicePerformance;
-
-    bool disabled = false;
-    if (needsHighPerformance) {
-      disabled = !viewModel.highPerformanceDevice;
-    }
+    bool disabled = !_deviceCheck(shape);
 
     String imageName;
     Color textColor = Colors.white;
@@ -170,7 +165,7 @@ class ShapeViewState extends State<ShapeView> {
         textColor = Colors.white;
       }
     }
-    
+
     return Opacity(
       opacity: disabled ? 0.6 : 1.0,
       child: TextButton(
@@ -183,12 +178,10 @@ class ShapeViewState extends State<ShapeView> {
               viewModel.setSelectedIndex(index);
             });
           } else {
-            if (disabled) {
-              // 提示仅支持高端机型
-              showCommonToast(context: context, content: "该功能只支持在高端机上使用");
-            }
+            // 提示仅支持高端机型
+            showCommonToast(context: context, content: "该功能只支持在高端机上使用");
           }
-        }, 
+        },
         child: Column(
           children: [
             SizedBox(
@@ -211,5 +204,9 @@ class ShapeViewState extends State<ShapeView> {
         )
       ),
     );
+  }
+
+  bool _deviceCheck(ShapeModel skin) {
+    return viewModel.devicePerformanceLevel >= skin.supportDeviceLevel;
   }
 }

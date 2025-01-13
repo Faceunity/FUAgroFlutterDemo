@@ -99,11 +99,12 @@ public class SwiftAgoraRtcRawdataPlugin: NSObject, FlutterPlugin, AgoraAudioFram
                 input.renderConfig.isFromMirroredCamera = false
                 //贴纸强制左右镜像
                 input.renderConfig.stickerFlipH = true;
-                
+
                 let pointY: UnsafeMutablePointer<UInt8> = transform(videoFrame.yBuffer)
                 let pointU: UnsafeMutablePointer<UInt8> = transform(videoFrame.uBuffer)
                 let pointV: UnsafeMutablePointer<UInt8> = transform(videoFrame.vBuffer)
                 let imagebuffer = FUImageBufferMakeI420(pointY , pointU, pointV, Int(videoFrame.width),Int(videoFrame.height), Int(videoFrame.yStride), Int(videoFrame.uStride), Int(videoFrame.vStride))
+//                let imagebuffer = FUImageBufferMakeRGBA(videoFrame.yBuffer, Int(videoFrame.width), Int(videoFrame.height), Int(videoFrame.yStride))
                 input.imageBuffer = imagebuffer;
                 
                 if (FURenderKit.share().beauty != nil && FURenderKit.share().beauty?.enable == true) {
@@ -124,7 +125,7 @@ public class SwiftAgoraRtcRawdataPlugin: NSObject, FlutterPlugin, AgoraAudioFram
                 }
                 FURenderKit.share().render(with: input)
             }
-            
+
         }
         return true
     }
@@ -134,19 +135,19 @@ public class SwiftAgoraRtcRawdataPlugin: NSObject, FlutterPlugin, AgoraAudioFram
 //        memset(videoFrame.vBuffer, 255, Int(videoFrame.vStride * videoFrame.height) / 2)
         return true
     }
-    
+
     private func transform(_ buffer: UnsafeMutableRawPointer) -> UnsafeMutablePointer<UInt8> {
         let point: UnsafeMutableRawPointer = buffer
         let opaquePtr = OpaquePointer(point)
         let baseAddress = UnsafeMutablePointer<UInt8>(opaquePtr)
         return baseAddress
     }
-    
+
     private func untransform(_ byte:UnsafeMutablePointer<UInt8>) -> UnsafeMutableRawPointer {
         let point: UnsafeMutablePointer<UInt8> = byte;
         let opaquePtr = OpaquePointer(point);
         let voidPoint = UnsafeMutableRawPointer(opaquePtr);
-        
+
         return voidPoint
     }
 }

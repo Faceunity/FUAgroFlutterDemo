@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:faceunity_plugin/faceunity_plugin.dart';
 import 'package:faceunity_plugin/filter_plugin.dart';
 import 'package:faceunity_ui_flutter/modules/filter/filter_model.dart';
 import 'package:faceunity_ui_flutter/util/common_util.dart';
+import 'package:faceunity_ui_flutter/util/faceunity_defines.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -12,6 +14,8 @@ class FilterViewModel extends ChangeNotifier {
     getFilters();
   }
 
+  // 设备是否高性能机型
+  late int devicePerformanceLevel = DevicePerformanceLevel.levelTwo;
   late List<FilterModel> filters = [];
 
   // 选中滤镜索引
@@ -36,6 +40,7 @@ class FilterViewModel extends ChangeNotifier {
   }
 
   void getFilters() async {
+    devicePerformanceLevel = await FaceunityPlugin.devicePerformanceLevel();
     String jsonString = await rootBundle.loadString(CommonUtil.bundleFileNamed("filter/beauty_filter.json"));
     final jsonData = json.decode(jsonString);
     List<FilterModel> filterModels = [];
@@ -44,7 +49,7 @@ class FilterViewModel extends ChangeNotifier {
       filterModels.add(filter);
     }
     filters = filterModels;
-    setSelectedIndex(1);
+    setSelectedIndex(devicePerformanceLevel == DevicePerformanceLevel.levelMinusOne ? 0 : 1);
     notifyListeners();
   }
 }

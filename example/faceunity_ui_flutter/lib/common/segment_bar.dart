@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 
-typedef OnChange = void Function(int index);
+typedef OnChange = void Function(int index, bool enable);
+
+class BarItem {
+  final String title;
+  final bool enable;
+
+  BarItem(this.title, {this.enable = true});
+
+}
 
 class SegmentBar extends StatefulWidget {
 
   const SegmentBar({Key? key, required this.onChange, required this.items}) : super(key: key);
 
   final OnChange onChange;
-  final List<String> items;
+  final List<BarItem> items;
 
   @override
   State<StatefulWidget> createState() {
@@ -36,22 +44,28 @@ class SegmentBarState extends State<SegmentBar> {
   }
 
   Widget _itemCell(int index) {
+    BarItem item = widget.items[index];
     return TextButton(
       style: ButtonStyle(
         overlayColor: MaterialStateProperty.resolveWith((states) => Colors.transparent)
       ),
       onPressed: () {
         setState(() {
-          selectedIndex = index;
-          widget.onChange(index);
+          if (item.enable) {
+            selectedIndex = index;
+          }
+          widget.onChange(index, item.enable);
         });
-      }, 
+      },
       child: Center(
-        child: Text(
-          widget.items[index],
-          style: TextStyle(
-            color: index == selectedIndex ? const Color.fromARGB(255, 94, 199, 254) : Colors.white,
-            fontSize: 13,
+        child: Opacity(
+          opacity: item.enable ? 1 : 0.5,
+          child: Text(
+            item.title,
+            style: TextStyle(
+              color: index == selectedIndex ? const Color.fromARGB(255, 94, 199, 254) : Colors.white,
+              fontSize: 13,
+            ),
           ),
         ),
       )
