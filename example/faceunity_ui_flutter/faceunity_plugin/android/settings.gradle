@@ -1,1 +1,3 @@
+package example.faceunity_ui_flutter.faceunity_plugin.android
+
 rootProject.name = 'faceunity_plugin'

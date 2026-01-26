@@ -18,7 +18,7 @@ dependencies:
   json_annotation: ^4.8.1
   build_runner: ^2.4.6
   json_serializable: ^6.7.1
-  fluttertoast: 8.1.0
+  fluttertoast: ^8.2.4
   # 插件
   faceunity_plugin:
     path: faceunity_plugin

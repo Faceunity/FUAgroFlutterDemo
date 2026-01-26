@@ -62,7 +62,7 @@ public class SwiftAgoraRtcRawdataPlugin: NSObject, FlutterPlugin, AgoraAudioFram
     public func onPlaybackAudioFrame(beforeMixing _: AgoraAudioFrame, uid _: UInt) -> Bool {
         return true
     }
-    
+
     public func getVideoFormatPreference() -> AgoraVideoFrameType {
         return .YUV420
     }
@@ -70,13 +70,13 @@ public class SwiftAgoraRtcRawdataPlugin: NSObject, FlutterPlugin, AgoraAudioFram
     public func onCaptureVideoFrame(_ sourceType: Int32, frame videoFrame: AgoraVideoFrame) -> Bool {
 //        memset(videoFrame.uBuffer, 0, Int(videoFrame.uStride * videoFrame.height) / 2)
 //        memset(videoFrame.vBuffer, 0, Int(videoFrame.vStride * videoFrame.height) / 2)
-        
+
         if(fuIsLibraryInit() > 0){
             let input = FURenderInput.init();
             if (videoFrame.type == .YUV420) {
                 //默认图片内部的人脸始终是朝上，旋转屏幕也无需修改该属性。
                 var inputOriginTation: FUImageOrientation = FUImageOrientationUP;
-                
+
                 switch videoFrame.rotation {
                 case 0:
                     inputOriginTation = FUImageOrientationUP
@@ -106,7 +106,7 @@ public class SwiftAgoraRtcRawdataPlugin: NSObject, FlutterPlugin, AgoraAudioFram
                 let imagebuffer = FUImageBufferMakeI420(pointY , pointU, pointV, Int(videoFrame.width),Int(videoFrame.height), Int(videoFrame.yStride), Int(videoFrame.uStride), Int(videoFrame.vStride))
 //                let imagebuffer = FUImageBufferMakeRGBA(videoFrame.yBuffer, Int(videoFrame.width), Int(videoFrame.height), Int(videoFrame.yStride))
                 input.imageBuffer = imagebuffer;
-                
+
                 if (FURenderKit.share().beauty != nil && FURenderKit.share().beauty?.enable == true) {
                     if (Int(FURenderKit.devicePerformanceLevel().rawValue) >= Int(FUDevicePerformanceLevel.high.rawValue)) {
                         let score = FUAIKit.fuFaceProcessorGetConfidenceScore(0)

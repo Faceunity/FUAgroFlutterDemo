@@ -1,2 +1,2 @@
-//#error 请先联系相芯科技替换鉴权文件
+//#error 请先替换证书
 static char g_auth_package[]={};
