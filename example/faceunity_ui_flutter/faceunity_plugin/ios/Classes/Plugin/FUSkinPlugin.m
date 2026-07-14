@@ -8,18 +8,21 @@
 #import "FUSkinPlugin.h"
 #import <FURenderKit/FURenderKit.h>
 
-typedef NS_ENUM(NSUInteger, FUBeautySkin) {
-    FUBeautySkinBlurLevel = 0,
-    FUBeautySkinColorLevel,
-    FUBeautySkinRedLevel,
-    FUBeautySkinSharpen,
-    FUBeautySkinFaceThreed,
-    FUBeautySkinEyeBright,
-    FUBeautySkinToothWhiten,
-    FUBeautySkinRemovePouchStrength,
-    FUBeautySkinRemoveNasolabialFoldsStrength,
-    FUBeautySkinAntiAcneSpot,
-    FUBeautySkinClarity
+typedef NS_ENUM(NSUInteger, FUBeautySkin
+) {
+FUBeautySkinBlurLevel = 0,
+        FUBeautySkinColorLevel,
+        FUBeautySkinRedLevel,
+        FUBeautySkinSharpen,
+        FUBeautySkinFaceThreed,
+        FUBeautySkinEyeBright,
+        FUBeautySkinToothWhiten,
+        FUBeautySkinRemovePouchStrength,
+        FUBeautySkinRemoveNasolabialFoldsStrength,
+        FUBeautySkinAntiAcneSpot,
+        FUBeautySkinClarity,
+        FUBeautySkinBodyBlur,
+        FUBeautySkinFacialPlumping,
 };
 
 @implementation FUSkinPlugin
@@ -60,14 +63,20 @@ typedef NS_ENUM(NSUInteger, FUBeautySkin) {
         case FUBeautySkinClarity:
             [FURenderKit shareRenderKit].beauty.clarity = value;
             break;
+        case FUBeautySkinBodyBlur:
+            [[FURenderKit shareRenderKit].beauty setParam:@(value) forName:@"body_blur_level" paramType:FUParamTypeDouble];
+            break;
+        case FUBeautySkinFacialPlumping:
+            [[FURenderKit shareRenderKit].beauty setParam:@(value) forName:@"facial_plump" paramType:FUParamTypeDouble];
+            break;
     }
 }
 
-- (void)setBeautyParam:(NSString *)key value:(NSNumber *)value{
-    
-    NSLog(@"key = %@, value = %d",key,value.intValue);
-    
-    if([key isEqualToString:@"enable_skinseg"]){
+- (void)setBeautyParam:(NSString *)key value:(NSNumber *)value {
+
+    NSLog(@"key = %@, value = %d", key, value.intValue);
+
+    if ([key isEqualToString:@"enable_skinseg"]) {
         [FURenderKit shareRenderKit].beauty.enableSkinSegmentation = value.boolValue;
     }
 }

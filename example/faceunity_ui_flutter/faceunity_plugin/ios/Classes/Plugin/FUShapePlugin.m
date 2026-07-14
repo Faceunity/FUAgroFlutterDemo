@@ -8,32 +8,34 @@
 #import "FUShapePlugin.h"
 #import <FURenderKit/FURenderKit.h>
 
-typedef NS_ENUM(NSUInteger, FUBeautyShape) {
-    FUBeautyShapeCheekThinning = 0,
-    FUBeautyShapeCheekV,
-    FUBeautyShapeCheekNarrow,
-    FUBeautyShapeCheekShort,
-    FUBeautyShapeCheekSmall,
-    FUBeautyShapeCheekbones,
-    FUBeautyShapeLowerJaw,
-    FUBeautyShapeEyeEnlarging,
-    FUBeautyShapeEyeCircle,
-    FUBeautyShapeChin,
-    FUBeautyShapeForehead,
-    FUBeautyShapeNose,
-    FUBeautyShapeMouth,
-    FUBeautyShapeLipThick,
-    FUBeautyShapeEyeHeight,
-    FUBeautyShapeCanthus,
-    FUBeautyShapeEyeLid,
-    FUBeautyShapeEyeSpace,
-    FUBeautyShapeEyeRotate,
-    FUBeautyShapeLongNose,
-    FUBeautyShapePhiltrum,
-    FUBeautyShapeSmile,
-    FUBeautyShapeBrowHeight,
-    FUBeautyShapeBrowSpace,
-    FUBeautyShapeBrowThick
+typedef NS_ENUM(NSUInteger, FUBeautyShape
+) {
+FUBeautyShapeCheekThinning = 0,
+        FUBeautyShapeCheekV,
+        FUBeautyShapeCheekNarrow,
+        FUBeautyShapeCheekShort,
+        FUBeautyShapeCheekSmall,
+        FUBeautyShapeCheekbones,
+        FUBeautyShapeLowerJaw,
+        FUBeautyShapeEyeEnlarging,
+        FUBeautyShapeEyeCircle,
+        FUBeautyShapeChin,
+        FUBeautyShapeForehead,
+        FUBeautyShapeNose,
+        FUBeautyShapeMouth,
+        FUBeautyShapeLipThick,
+        FUBeautyShapeEyeHeight,
+        FUBeautyShapeCanthus,
+        FUBeautyShapeEyeLid,
+        FUBeautyShapeEyeSpace,
+        FUBeautyShapeEyeRotate,
+        FUBeautyShapeLongNose,
+        FUBeautyShapePhiltrum,
+        FUBeautyShapeSmile,
+        FUBeautyShapeBrowHeight,
+        FUBeautyShapeBrowSpace,
+        FUBeautyShapeBrowThick,
+        FUBeautyShapeEyePupil,
 };
 
 @implementation FUShapePlugin
@@ -115,6 +117,9 @@ typedef NS_ENUM(NSUInteger, FUBeautyShape) {
             break;
         case FUBeautyShapeBrowThick:
             [FURenderKit shareRenderKit].beauty.intensityBrowThick = value;
+            break;
+        case FUBeautyShapeEyePupil:
+            [[FURenderKit shareRenderKit].beauty setParam:@(value) forName:@"intensity_eye_pupil" paramType:FUParamTypeDouble];
             break;
     }
 }

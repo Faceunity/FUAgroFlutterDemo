@@ -51,4 +51,5 @@ const _$BeautyShapeEnumMap = {
   BeautyShape.browHeight: 22,
   BeautyShape.browSpace: 23,
   BeautyShape.browThick: 24,
+  BeautyShape.eyePupil: 25,
 };

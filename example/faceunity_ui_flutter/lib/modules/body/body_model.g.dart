@@ -30,4 +30,5 @@ const _$BeautyBodyEnumMap = {
   BeautyBody.beautyButtock: 4,
   BeautyBody.smallHead: 5,
   BeautyBody.thinLeg: 6,
+  BeautyBody.breastStrength: 7,
 };

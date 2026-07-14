@@ -9,14 +9,16 @@
 #import <FURenderKit/FURenderKit.h>
 
 /// 美体模块子功能
-typedef NS_ENUM(NSUInteger, FUBeautyBody) {
-    FUBeautyBodySlim,                   // 瘦身
-    FUBeautyBodyLongLeg,                // 长腿
-    FUBeautyBodyThinWaist,              // 细腰
-    FUBeautyBodyBeautyShoulder,         // 美肩
-    FUBeautyBodyBeautyButtock,          // 美臀
-    FUBeautyBodySmallHead,              // 小头
-    FUBeautyBodyThinLeg,                // 瘦腿
+typedef NS_ENUM(NSUInteger, FUBeautyBody
+) {
+FUBeautyBodySlim,                   // 瘦身
+FUBeautyBodyLongLeg,                // 长腿
+FUBeautyBodyThinWaist,              // 细腰
+FUBeautyBodyBeautyShoulder,         // 美肩
+FUBeautyBodyBeautyButtock,          // 美臀
+FUBeautyBodySmallHead,              // 小头
+FUBeautyBodyThinLeg,                // 瘦腿
+FUBeautyBodyBreastStrength,         // 丰胸
 };
 
 
@@ -45,6 +47,9 @@ typedef NS_ENUM(NSUInteger, FUBeautyBody) {
             break;
         case FUBeautyBodyThinLeg:
             [FURenderKit shareRenderKit].bodyBeauty.legSlim = value;
+            break;
+        case FUBeautyBodyBreastStrength:
+            [[FURenderKit shareRenderKit].bodyBeauty setParam:@(value) forName:@"BreastStrength" paramType:FUParamTypeDouble];
             break;
     }
 }

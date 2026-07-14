@@ -38,6 +38,7 @@ class FUBodyBeautyPlugin : BaseModulePlugin() {
             BodyEnum.FUBeautyBodyBeautyButtock -> renderKit.bodyBeauty?.hipSlimIntensity = intensity
             BodyEnum.FUBeautyBodySmallHead -> renderKit.bodyBeauty?.headSlimIntensity = intensity
             BodyEnum.FUBeautyBodyThinLeg -> renderKit.bodyBeauty?.legSlimIntensity = intensity
+            BodyEnum.FUBeautyBodyBreastStrength -> renderKit.bodyBeauty?.breastIntensity = intensity
             else -> {}
         }
 
@@ -67,6 +68,7 @@ class FUBodyBeautyPlugin : BaseModulePlugin() {
         FUBeautyBodyBeautyButtock,          // 美臀
         FUBeautyBodySmallHead,              // 小头
         FUBeautyBodyThinLeg,                // 瘦腿
+        FUBeautyBodyBreastStrength,         // 丰胸
     }
 
 }

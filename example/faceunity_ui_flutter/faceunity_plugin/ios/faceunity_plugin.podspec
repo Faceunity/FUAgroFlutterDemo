@@ -16,7 +16,7 @@ A new Flutter plugin project.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'FURenderKit_nama', '8.15.0'
+  s.dependency 'FURenderKit_nama', '9.0.0'
   s.resource_bundles = {
       'faceunity_plugin' => ['Assets/**/*.{png,bundle,json}']
   }

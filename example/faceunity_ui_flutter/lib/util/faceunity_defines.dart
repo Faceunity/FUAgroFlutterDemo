@@ -53,7 +53,13 @@ enum BeautySkin {
   antiAcneSpot(9),  // 祛斑痘
 
   @JsonValue(10)
-  clarity(10);  // 清晰
+  clarity(10),  // 清晰
+
+  @JsonValue(11)
+  facialPlumping(11),  // 面部丰盈
+
+  @JsonValue(12)
+  bodyBlur(12);  // 全身磨皮
 
   const BeautySkin(this.number);
   final int number;
@@ -134,7 +140,10 @@ enum BeautyShape {
   browSpace(23),  // 眉间距
 
   @JsonValue(24)
-  browThick(24); // 眉毛粗细
+  browThick(24), // 眉毛粗细
+
+  @JsonValue(25)
+  eyePupil(25); // 瞳孔大小
 
   const BeautyShape(this.number);
   final int number;
@@ -160,7 +169,10 @@ enum BeautyBody {
   smallHead(5), // 小头
 
   @JsonValue(6)
-  thinLeg(6); // 瘦腿
+  thinLeg(6), // 瘦腿
+
+  @JsonValue(7)
+  breastStrength(6); // 丰胸
 
   const BeautyBody(this.number);
   final int number;
