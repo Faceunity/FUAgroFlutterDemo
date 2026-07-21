@@ -10,7 +10,7 @@
   },
   {
     "name": "全身磨皮",
-    "type": 0,
+    "type": 12,
     "currentValue": 0.0,
     "defaultValue": 0.0,
     "defaultValueInMiddle": false,

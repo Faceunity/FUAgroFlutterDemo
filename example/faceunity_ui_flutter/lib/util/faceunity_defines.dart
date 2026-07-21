@@ -172,7 +172,7 @@ enum BeautyBody {
   thinLeg(6), // 瘦腿
 
   @JsonValue(7)
-  breastStrength(6); // 丰胸
+  breastStrength(7); // 丰胸
 
   const BeautyBody(this.number);
   final int number;

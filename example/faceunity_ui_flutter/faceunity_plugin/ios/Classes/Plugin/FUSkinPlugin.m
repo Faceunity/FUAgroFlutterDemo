@@ -21,8 +21,8 @@ FUBeautySkinBlurLevel = 0,
         FUBeautySkinRemoveNasolabialFoldsStrength,
         FUBeautySkinAntiAcneSpot,
         FUBeautySkinClarity,
-        FUBeautySkinBodyBlur,
         FUBeautySkinFacialPlumping,
+        FUBeautySkinBodyBlur,
 };
 
 @implementation FUSkinPlugin
